@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Minimalist approach -->
+  <rect width="32" height="32" fill="#FAFBFC"/>
+  
+  <!-- Simple speech bubble -->
+  <path d="M6 8 Q6 6 8 6 L24 6 Q26 6 26 8 L26 18 Q26 20 24 20 L14 20 L10 26 L11 20 L8 20 Q6 20 6 18 Z" 
+        fill="#0052CC"/>
+  
+  <!-- Iconic mustache - simplified -->
+  <path d="M16 11 Q13 11 11 13 Q13 14 16 12 Q19 14 21 13 Q19 11 16 11" 
+        fill="white"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Bold speech bubble -->
+  <path d="M8 12 h48 a8 8 0 0 1 8 8 v20 a8 8 0 0 1 -8 8 h-28 l-12 12 v-12 h-8 a8 8 0 0 1 -8 -8 v-20 a8 8 0 0 1 8 -8" 
+        fill="#3b82f6"/>
+  
+  <!-- Bold Chaplin mustache -->
+  <path d="M18 30 c8 0 8 -8 14 -8 s6 8 14 8" 
+        fill="none" 
+        stroke="#fff" 
+        stroke-width="5" 
+        stroke-linecap="round"/>
+  
+  <!-- Single connection dot for clarity at small sizes -->
+  <circle cx="32" cy="24" r="4" fill="#fff"/>
+</svg>

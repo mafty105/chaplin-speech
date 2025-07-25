@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ChaplinSpeech MVP
 
-## Getting Started
+チャップリン方式でスピーチ力を鍛える練習アプリケーション
 
-First, run the development server:
+## 機能
+
+- 参加人数に応じたお題の自動生成
+- お題からの連想ワード生成（チャップリン方式）
+- API使用量の監視と制限
+- セッションストレージによるキャッシュ機能
+- レスポンシブデザイン対応
+- Google AdSense広告配置（プレースホルダー）
+
+## セットアップ
+
+### 1. 依存関係のインストール
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. 環境変数の設定
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`.env.local`ファイルを作成し、Google Gemini APIキーを設定：
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+NEXT_PUBLIC_GEMINI_API_KEY=your_api_key_here
+```
 
-## Learn More
+APIキーは[Google AI Studio](https://makersuite.google.com/app/apikey)から取得できます。
 
-To learn more about Next.js, take a look at the following resources:
+### 3. 開発サーバーの起動
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+http://localhost:4321 でアプリケーションが起動します。
 
-## Deploy on Vercel
+## 技術スタック
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **フレームワーク**: Next.js 15 (App Router)
+- **スタイリング**: Tailwind CSS
+- **言語**: TypeScript
+- **外部API**: Google Gemini API (gemini-1.5-flash)
+- **パッケージマネージャー**: pnpm
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API制限
+
+- **分あたり**: 15リクエスト
+- **日あたり**: 1500リクエスト（安全マージンで1400に制限）
+- 制限到達時は自動的にフォールバックデータを使用
+
+## プロダクション展開
+
+### Vercelへのデプロイ
+
+1. [Vercel](https://vercel.com)にプロジェクトをインポート
+2. 環境変数`NEXT_PUBLIC_GEMINI_API_KEY`を設定
+3. デプロイ実行
+
+### Google AdSense統合
+
+プロダクション環境では、AdBannerコンポーネントを実際のGoogle AdSenseコードに置き換えてください。
+
+## 今後の拡張予定
+
+- ユーザー認証機能
+- お題の履歴保存
+- スピーチ録音機能
+- SNSシェア機能
+- より高度な連想アルゴリズム
