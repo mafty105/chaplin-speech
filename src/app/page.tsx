@@ -7,7 +7,7 @@ import TopicsList from '@/components/TopicsList'
 import AboutSection from '@/components/AboutSection'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { NumberStepper } from '@/components/ui/number-stepper'
 import { Topic } from '@/types'
 import { generateTopics } from '@/lib/api-client'
 
@@ -107,27 +107,22 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center gap-3">
-                  <Input
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={participants}
-                    onChange={(e) => {
-                      const value = parseInt(e.target.value)
-                      if (value >= 1 && value <= 10) {
-                        setParticipants(value)
-                      }
-                    }}
-                    className="w-20 text-center font-semibold"
-                    disabled={isGenerating}
-                  />
-                  <span className="text-[#172B4D] text-sm font-medium">人</span>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <NumberStepper
+                      value={participants}
+                      onChange={setParticipants}
+                      min={1}
+                      max={10}
+                      disabled={isGenerating}
+                    />
+                    <span className="text-[#172B4D] text-base font-medium">人</span>
+                  </div>
                   <Button
                     onClick={handleGenerateTopics}
                     disabled={isGenerating}
                     isLoading={isGenerating}
-                    className="ml-auto"
+                    className="w-full sm:w-auto sm:ml-auto"
                     variant={hasGenerated ? "secondary" : "primary"}
                   >
                     {!isGenerating && (
