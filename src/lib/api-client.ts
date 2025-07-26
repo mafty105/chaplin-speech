@@ -45,3 +45,38 @@ export async function generateAssociations(topic: string): Promise<string> {
     throw error
   }
 }
+
+export interface SpeechData {
+  speech: {
+    opening: string
+    body: string[]
+    closing: string
+  }
+  tips: string[]
+}
+
+export async function generateSpeech(
+  topic: string, 
+  associations: string
+): Promise<SpeechData> {
+  try {
+    const response = await fetch('/api/generate-speech', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ topic, associations }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error || 'Failed to generate speech')
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error generating speech:', error)
+    throw error
+  }
+}

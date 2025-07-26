@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageSquare, CheckCircle2, ChevronDown, Loader2, ArrowRight } from 'lucide-react'
+import { MessageSquare, CheckCircle2, ChevronDown, Loader2, ArrowRight, Lightbulb } from 'lucide-react'
+import Link from 'next/link'
 import { Topic } from '@/types'
 import { generateAssociations } from '@/lib/api-client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface TopicsListProps {
@@ -189,10 +191,22 @@ export default function TopicsList({ topics, hasGenerated = false, onTopicsUpdat
           ))}
         </div>
         
-        <div className="mt-4 p-3 bg-[#F4F5F7] rounded">
-          <p className="text-xs text-[#6B778C] text-center">
-            お題をクリックすると連想ワードが表示されます
-          </p>
+        <div className="mt-4 space-y-3">
+          <div className="p-3 bg-[#F4F5F7] rounded">
+            <p className="text-xs text-[#6B778C] text-center">
+              お題をクリックすると連想ワードが表示されます
+            </p>
+          </div>
+          
+          {/* Show examples button if any topic has associations */}
+          {topics.some(t => t.associations) && (
+            <Link href="/examples" className="block">
+              <Button variant="primary" className="w-full">
+                <Lightbulb className="w-4 h-4 mr-2" />
+                このお題でスピーチ例を見る
+              </Button>
+            </Link>
+          )}
         </div>
       </CardContent>
     </Card>

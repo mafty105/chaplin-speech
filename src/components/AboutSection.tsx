@@ -141,6 +141,10 @@ export default function AboutSection() {
               <span className="font-semibold text-[#0052CC]">3.</span>
               表示された連想ワードをヒントにスピーチに挑戦！
             </li>
+            <li className="flex gap-2">
+              <span className="font-semibold text-[#0052CC]">4.</span>
+              「スピーチ例を見る」で実際の構成を参考にできます
+            </li>
           </ol>
         </div>
       </CardContent>
