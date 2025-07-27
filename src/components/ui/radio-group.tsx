@@ -88,7 +88,11 @@ export const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemPro
     return (
       <div
         ref={ref}
-        className={cn(radioItemVariants({ disabled: isDisabled }), className)}
+        className={cn(
+          radioItemVariants({ disabled: isDisabled }), 
+          isChecked && 'bg-[#F4F5F7] rounded px-3 py-2 -mx-3 -my-2',
+          className
+        )}
         onClick={handleClick}
         {...props}
       >
@@ -111,7 +115,7 @@ export const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemPro
         </div>
         <label
           className={cn(
-            'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+            'text-sm font-medium text-[#172B4D] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
             isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
           )}
         >
