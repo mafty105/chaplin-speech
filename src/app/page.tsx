@@ -2,18 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Users, RefreshCw, Loader2 } from 'lucide-react'
+import { Sparkles, Users, RefreshCw, Loader2, MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import TopicsList from '@/components/TopicsList'
 import AboutSection from '@/components/AboutSection'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { NumberStepper } from '@/components/ui/number-stepper'
-import { Topic } from '@/types'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Topic, SpeechStyle } from '@/types'
 
 export default function Home() {
   const router = useRouter()
   const [participants, setParticipants] = useState<number>(1)
+  const [speechStyle, setSpeechStyle] = useState<SpeechStyle>('none')
   const [topics, setTopics] = useState<Topic[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [hasGenerated, setHasGenerated] = useState(false)
@@ -53,7 +55,7 @@ export default function Home() {
       const response = await fetch('/api/generate-complete-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ participants })
+        body: JSON.stringify({ participants, speechStyle })
       })
 
       if (!response.ok) {
@@ -106,14 +108,16 @@ export default function Home() {
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Users className="w-5 h-5 text-[#6B778C]" />
-                  参加人数の設定
+                  練習の設定
                 </CardTitle>
                 <CardDescription>
-                  スピーチ練習に参加する人数を入力してください
+                  スピーチ練習の参加人数とスタイルを設定してください
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+              <CardContent className="space-y-6">
+                {/* 参加人数 */}
+                <div>
+                  <h3 className="text-sm font-medium text-[#172B4D] mb-3">参加人数</h3>
                   <div className="flex items-center gap-3">
                     <NumberStepper
                       value={participants}
@@ -124,11 +128,37 @@ export default function Home() {
                     />
                     <span className="text-[#172B4D] text-base font-medium">人</span>
                   </div>
+                </div>
+
+                {/* スピーチスタイル */}
+                <div>
+                  <h3 className="text-sm font-medium text-[#172B4D] mb-1 flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-[#6B778C]" />
+                    スピーチスタイル
+                  </h3>
+                  <p className="text-xs text-[#6B778C] mb-3">
+                    生成されるお題とスピーチ例のスタイルを選択してください
+                  </p>
+                  <RadioGroup
+                    value={speechStyle}
+                    onValueChange={(value) => setSpeechStyle(value as SpeechStyle)}
+                    disabled={isGenerating}
+                  >
+                    <RadioGroupItem value="none">指定なし</RadioGroupItem>
+                    <RadioGroupItem value="funny">面白い話</RadioGroupItem>
+                    <RadioGroupItem value="moving">感動する話</RadioGroupItem>
+                    <RadioGroupItem value="educational">勉強になる話</RadioGroupItem>
+                    <RadioGroupItem value="surprising">びっくりする話</RadioGroupItem>
+                  </RadioGroup>
+                </div>
+
+                {/* 生成ボタン */}
+                <div className="pt-2">
                   <Button
                     onClick={handleGenerateTopics}
                     disabled={isGenerating}
                     isLoading={isGenerating}
-                    className="w-full sm:w-auto sm:ml-auto"
+                    className="w-full"
                     variant={hasGenerated ? "secondary" : "primary"}
                   >
                     {!isGenerating && (
