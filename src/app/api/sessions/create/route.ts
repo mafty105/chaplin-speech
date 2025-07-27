@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { nanoid } from 'nanoid'
 import { redis, SESSION_TTL } from '@/lib/redis'
-import { generateQRCodeDataURL, createShareableURL } from '@/lib/qr-generator'
+import { generateQRCodeDataURL } from '@/lib/qr-generator'
 import { CreateSessionRequest, CreateSessionResponse, Session } from '@/types'
 
 // Validation function
@@ -88,8 +88,12 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // Generate QR code and shareable URL
-    const shareUrl = createShareableURL(sessionId)
+    // Generate shareable URL using request headers
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+      (request.headers.get('host') ? `https://${request.headers.get('host')}` : 'http://localhost:4321')
+    const shareUrl = `${baseUrl}/session/${sessionId}`
+    
+    // Generate QR code
     const qrCodeUrl = await generateQRCodeDataURL(shareUrl)
     
     // Create response

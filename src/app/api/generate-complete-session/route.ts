@@ -265,7 +265,7 @@ export async function POST(request: NextRequest) {
     
     // Create response
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-      (request.headers.get('host') ? `http://${request.headers.get('host')}` : 'http://localhost:4321')
+      (request.headers.get('host') ? `https://${request.headers.get('host')}` : 'http://localhost:4321')
     
     const response: GenerateCompleteSessionResponse = {
       sessionId,
