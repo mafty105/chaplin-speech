@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Sparkles, MessageSquare, ArrowRight, Lightbulb, AlertCircle, Loader2, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
@@ -29,9 +29,7 @@ export default function ExamplesPage() {
         const cachedTopics = sessionStorage.getItem('topics')
         if (cachedTopics) {
           const parsedTopics = JSON.parse(cachedTopics) as Topic[]
-          // Filter only topics that have associations
-          const topicsWithAssociations = parsedTopics.filter(t => t.associations)
-          setTopics(topicsWithAssociations)
+          setTopics(parsedTopics)
         }
       } catch (err) {
         console.error('Failed to load topics:', err)
@@ -48,7 +46,7 @@ export default function ExamplesPage() {
     try {
       const speechData = await generateSpeech(
         topic.text,
-        topic.associations!
+        topic.associations || ''  // Pass empty string if no associations
       )
       return { ...speechData, index, loading: false }
     } catch (error) {
@@ -64,39 +62,73 @@ export default function ExamplesPage() {
 
   // Generate speeches for all topics
   const generateSpeeches = async () => {
-    const topicsWithAssociations = topics.filter(t => t.associations)
-    if (topicsWithAssociations.length === 0) return
+    if (topics.length === 0) return
 
     setGeneratingAll(true)
-    // Generate one speech per topic
-    setSpeeches(topicsWithAssociations.map((_, index) => ({ 
+    // Initialize all speeches with loading state
+    setSpeeches(topics.map((_, index) => ({ 
       index, 
       loading: true, 
       speech: { opening: '', body: [], closing: '' }, 
       tips: [] 
     })))
 
-    // Generate speeches in parallel
-    const promises = topicsWithAssociations.map((topic, index) => generateSpeechForTopic(topic, index))
-    const results = await Promise.all(promises)
+    // Generate speeches in parallel and update each one as it completes
+    const promises = topics.map(async (topic, index) => {
+      const speechData = await generateSpeechForTopic(topic, index)
+      // Update this specific speech when it's done
+      setSpeeches(prev => prev.map(s => 
+        s.index === index ? speechData : s
+      ))
+      return speechData
+    })
     
-    setSpeeches(results)
+    await Promise.all(promises)
     setGeneratingAll(false)
   }
 
   // Auto-generate speeches when topics are loaded
   useEffect(() => {
-    if (topics.length > 0) {
-      generateSpeeches()
+    if (topics.length > 0 && speeches.length === 0) {
+      // Initialize all speeches with loading state immediately
+      const initialSpeeches = topics.map((_, index) => ({ 
+        index, 
+        loading: true, 
+        speech: { opening: '', body: [], closing: '' }, 
+        tips: [] 
+      }))
+      setSpeeches(initialSpeeches)
+      
+      // Generate speeches for each topic
+      topics.forEach(async (topic, index) => {
+        try {
+          const speechData = await generateSpeech(
+            topic.text,
+            topic.associations || ''  // Pass empty string if no associations
+          )
+          setSpeeches(prev => prev.map(s => 
+            s.index === index ? { ...speechData, index, loading: false } : s
+          ))
+        } catch (error) {
+          setSpeeches(prev => prev.map(s => 
+            s.index === index ? { 
+              index, 
+              loading: false, 
+              error: 'スピーチの生成に失敗しました',
+              speech: { opening: '', body: [], closing: '' },
+              tips: []
+            } : s
+          ))
+        }
+      })
     }
   }, [topics])
 
   // Regenerate a specific speech
   const regenerateSpeech = async (index: number) => {
-    const topicsWithAssociations = topics.filter(t => t.associations)
-    if (index >= topicsWithAssociations.length) return
+    if (index >= topics.length) return
 
-    const topic = topicsWithAssociations[index]
+    const topic = topics[index]
 
     setSpeeches(prev => prev.map(s => 
       s.index === index ? { ...s, loading: true } : s
@@ -138,7 +170,7 @@ export default function ExamplesPage() {
                 まだスピーチ例を表示できるお題がありません。
               </p>
               <p className="text-sm text-[#6B778C] mt-2">
-                ホームに戻って、お題を生成し、連想ワードを作成してください。
+                ホームに戻って、お題を生成してください。
               </p>
             </CardContent>
           </Card>
@@ -146,8 +178,6 @@ export default function ExamplesPage() {
       </div>
     )
   }
-
-  const topicsWithAssociations = topics.filter(t => t.associations)
 
   return (
     <div className="min-h-screen bg-[#FAFBFC]">
@@ -189,17 +219,6 @@ export default function ExamplesPage() {
           </Button>
         </div>
 
-        {/* All Speeches Loading State */}
-        {generatingAll && (
-          <Card className="mb-6">
-            <CardContent className="py-12 text-center">
-              <Loader2 className="w-8 h-8 animate-spin text-[#0052CC] mx-auto mb-3" />
-              <p className="text-[#6B778C]">スピーチ例を生成中...</p>
-              <p className="text-sm text-[#6B778C] mt-2">各お題についてスピーチを作成しています</p>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Generated Speeches */}
         <div className="space-y-6">
           {speeches.map((speech, index) => (
@@ -214,7 +233,7 @@ export default function ExamplesPage() {
                   <CardTitle className="flex items-center justify-between">
                     <span className="flex items-center gap-2 text-lg">
                       <Sparkles className="w-5 h-5 text-[#FFAB00]" />
-                      「{topicsWithAssociations[speech.index]?.text}」のスピーチ例
+                      「{topics[speech.index]?.text}」のスピーチ例
                     </span>
                     <Button
                       variant="subtle"
@@ -235,11 +254,11 @@ export default function ExamplesPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Show associations for this topic */}
-                  {topicsWithAssociations[speech.index]?.associations && !speech.loading && !speech.error && (
+                  {topics[speech.index]?.associations && !speech.loading && !speech.error && (
                     <div className="bg-[#F4F5F7] p-3 rounded-lg">
                       <p className="text-xs text-[#6B778C] font-medium mb-2">連想ワード:</p>
                       <div className="flex flex-wrap items-center gap-2">
-                        {topicsWithAssociations[speech.index].associations!.split(' → ').map((word, idx, arr) => (
+                        {topics[speech.index].associations!.split(' → ').map((word, idx, arr) => (
                           <div key={idx} className="flex items-center gap-2">
                             <Badge variant="subtle" size="sm">
                               {word.trim()}

@@ -198,12 +198,12 @@ export default function TopicsList({ topics, hasGenerated = false, onTopicsUpdat
             </p>
           </div>
           
-          {/* Show examples button if any topic has associations */}
-          {topics.some(t => t.associations) && (
+          {/* Show examples button if topics exist */}
+          {topics.length > 0 && (
             <Link href="/examples" className="block">
               <Button variant="primary" className="w-full">
                 <Lightbulb className="w-4 h-4 mr-2" />
-                このお題でスピーチ例を見る
+                スピーチ例を見る
               </Button>
             </Link>
           )}

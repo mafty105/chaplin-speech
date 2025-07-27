@@ -35,8 +35,7 @@ const model = genAI.getGenerativeModel({
 function validateRequestBody(body: any): body is RequestBody {
   return typeof body.topic === 'string' && 
          typeof body.associations === 'string' &&
-         body.topic.length > 0 &&
-         body.associations.length > 0
+         body.topic.length > 0
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse<SpeechResponse | { error: string }>> {
@@ -46,7 +45,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<SpeechRes
     // Request validation
     if (!validateRequestBody(body)) {
       return NextResponse.json(
-        { error: 'お題と連想ワードを指定してください' },
+        { error: 'お題を指定してください' },
         { status: 400 }
       )
     }
@@ -59,12 +58,12 @@ export async function POST(request: NextRequest): Promise<NextResponse<SpeechRes
 
 与えられた情報:
 - スピーチのお題: "${topic}"
-- 連想ワード（ヒント）: ${associations}
+${associations ? `- 連想ワード（ヒント）: ${associations}` : ''}
 
 重要な注意事項:
 - スピーチは「${topic}」についてのスピーチです
-- 連想ワードは発想のヒントとして参考にしてください
-- 連想ワードの中から特定の言葉を選んで話す必要はありません
+${associations ? `- 連想ワードは発想のヒントとして参考にしてください
+- 連想ワードの中から特定の言葉を選んで話す必要はありません` : ''}
 - 「${topic}」から自由に発想を広げてスピーチを作成してください
 
 以下の構成でスピーチを作成してください:
@@ -78,7 +77,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<SpeechRes
    - 3つの段落で構成
    - 各段落は80-120文字程度
    - 個人的な経験や具体例を含める
-   - 連想ワードからインスピレーションを得た内容を含めても良い
+${associations ? '   - 連想ワードからインスピレーションを得た内容を含めても良い' : ''}
    - 聴衆が共感できる内容
 
 3. 締めくくり（closing）:
