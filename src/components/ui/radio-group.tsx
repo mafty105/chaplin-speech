@@ -111,7 +111,7 @@ export const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemPro
         </div>
         <label
           className={cn(
-            'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+            'text-sm font-medium text-[#172B4D] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
             isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
           )}
         >

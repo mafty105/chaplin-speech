@@ -11,7 +11,7 @@ export default function Footer() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.5 }}
-      className="mt-16 border-t border-[#DFE1E6] bg-[#FAFBFC]"
+      className="mt-16 border-t border-[#DFE1E6]"
     >
       <div className="max-w-[480px] mx-auto px-4 py-6">
         <div className="flex flex-col items-center space-y-3">
