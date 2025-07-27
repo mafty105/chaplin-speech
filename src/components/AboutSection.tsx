@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Info, Target, Users, Zap, BookOpen, Trophy, Film } from 'lucide-react'
+import { Info, Target, Users, Zap, BookOpen, Trophy, Film, Share2, Sparkles } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function AboutSection() {
@@ -20,6 +20,16 @@ export default function AboutSection() {
       icon: <BookOpen className="w-4 h-4" />,
       title: "語彙力の拡大",
       description: "連想を通じて、普段使わない言葉との出会いがあります"
+    },
+    {
+      icon: <Share2 className="w-4 h-4" />,
+      title: "QRコードで簡単共有",
+      description: "生成したお題をQRコードで仲間と即座に共有できます"
+    },
+    {
+      icon: <Sparkles className="w-4 h-4" />,
+      title: "AI生成のスピーチ例",
+      description: "各お題に対してAIが生成した参考スピーチを確認できます"
     }
   ]
 
@@ -50,8 +60,8 @@ export default function AboutSection() {
           </h3>
           <p className="text-sm text-[#6B778C] leading-5">
             チャップリン方式は、与えられたお題から連想ゲームのように言葉を繋げていき、
-            連想されたワードをヒントにスピーチを行う練習方法です。
-            この方法により、予期しないテーマでも即座に話を組み立てる力が身につきます。
+            そのお題についてスピーチを行う練習方法です。
+            連想ワードは発想のヒントとして活用し、予期しないテーマでも即座に話を組み立てる力が身につきます。
           </p>
         </div>
 
@@ -103,6 +113,37 @@ export default function AboutSection() {
           </div>
         </div>
 
+        {/* New Features */}
+        <div className="bg-[#E3FCEF] border border-[#ABF5D1] p-4 rounded">
+          <h3 className="font-medium text-[#172B4D] mb-2 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-[#36B37E]" />
+            新機能のご紹介
+          </h3>
+          <ul className="space-y-2 text-sm text-[#172B4D]">
+            <li className="flex items-start gap-2">
+              <span className="text-[#36B37E] mt-0.5">•</span>
+              <div>
+                <span className="font-medium">事前生成システム：</span>
+                お題生成時に連想ワードとスピーチ例も同時に生成し、専用ページへ自動遷移
+              </div>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-[#36B37E] mt-0.5">•</span>
+              <div>
+                <span className="font-medium">QRコード共有：</span>
+                生成したお題をQRコードで簡単に共有（24時間有効）
+              </div>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-[#36B37E] mt-0.5">•</span>
+              <div>
+                <span className="font-medium">セッション管理：</span>
+                各セッションには固有のURLが割り当てられ、いつでもアクセス可能
+              </div>
+            </li>
+          </ul>
+        </div>
+
         {/* Target Users */}
         <div>
           <h3 className="font-medium text-[#172B4D] mb-3 flex items-center gap-2">
@@ -135,15 +176,15 @@ export default function AboutSection() {
             </li>
             <li className="flex gap-2">
               <span className="font-semibold text-[#0052CC]">2.</span>
-              生成されたお題から1つを選択
+              自動的に専用セッションページへ移動します
             </li>
             <li className="flex gap-2">
               <span className="font-semibold text-[#0052CC]">3.</span>
-              表示された連想ワードをヒントにスピーチに挑戦！
+              お題をクリックすると連想ワードとスピーチ例が表示されます
             </li>
             <li className="flex gap-2">
               <span className="font-semibold text-[#0052CC]">4.</span>
-              「スピーチ例を見る」で実際の構成を参考にできます
+              QRコードでお題を仲間と共有して一緒に練習！
             </li>
           </ol>
         </div>
