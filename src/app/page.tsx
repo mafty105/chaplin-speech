@@ -136,7 +136,7 @@ export default function Home() {
                     <MessageSquare className="w-4 h-4 text-[#6B778C]" />
                     スピーチスタイル
                   </h3>
-                  <p className="text-xs text-[#6B778C] mb-3">
+                  <p className="text-xs text-[#172B4D] mb-3">
                     生成されるお題とスピーチ例のスタイルを選択してください
                   </p>
                   <RadioGroup
