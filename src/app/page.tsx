@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Users, RefreshCw } from 'lucide-react'
+import { Sparkles, Users, RefreshCw, Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import TopicsList from '@/components/TopicsList'
 import AboutSection from '@/components/AboutSection'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { NumberStepper } from '@/components/ui/number-stepper'
 import { Topic } from '@/types'
-import { generateTopics } from '@/lib/api-client'
 
 export default function Home() {
+  const router = useRouter()
   const [participants, setParticipants] = useState<number>(1)
   const [topics, setTopics] = useState<Topic[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
@@ -48,23 +49,28 @@ export default function Home() {
     setError(null)
     
     try {
-      const topicTexts = await generateTopics(participants)
+      // Call the new complete session generation API
+      const response = await fetch('/api/generate-complete-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ participants })
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'セッションの作成に失敗しました')
+      }
+
+      const data = await response.json()
       
-      const newTopics: Topic[] = topicTexts.map((text, i) => ({
-        id: `topic-${Date.now()}-${i}`,
-        text,
-        associations: null,
-        associationGeneratedAt: null
-      }))
+      // Clear session storage since we're redirecting
+      sessionStorage.removeItem('topics')
+      sessionStorage.removeItem('topicsGeneratedAt')
       
-      setTopics(newTopics)
-      setHasGenerated(true)
-      
-      // Save to session storage
-      sessionStorage.setItem('topics', JSON.stringify(newTopics))
-      sessionStorage.setItem('topicsGeneratedAt', new Date().toISOString())
+      // Redirect to the session page
+      router.push(data.redirectUrl)
     } catch (err) {
-      setError('お題の生成に失敗しました。しばらく待ってからお試しください。')
+      setError(err instanceof Error ? err.message : 'お題の生成に失敗しました。しばらく待ってからお試しください。')
     } finally {
       setIsGenerating(false)
     }
@@ -134,7 +140,7 @@ export default function Home() {
                         )}
                       </>
                     )}
-                    {isGenerating ? '生成中...' : hasGenerated ? 'お題を再生成' : 'お題を生成'}
+                    {isGenerating ? 'セッションを作成中...' : hasGenerated ? 'お題を再生成' : 'お題を生成'}
                   </Button>
                 </div>
                 <AnimatePresence>
@@ -163,6 +169,7 @@ export default function Home() {
           >
             <TopicsList 
               topics={topics}
+              participants={participants}
               hasGenerated={hasGenerated}
               onTopicsUpdate={setTopics}
             />
