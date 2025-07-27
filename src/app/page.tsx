@@ -12,7 +12,7 @@ import { Topic } from '@/types'
 import { generateTopics } from '@/lib/api-client'
 
 export default function Home() {
-  const [participants, setParticipants] = useState<number>(5)
+  const [participants, setParticipants] = useState<number>(1)
   const [topics, setTopics] = useState<Topic[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [hasGenerated, setHasGenerated] = useState(false)
