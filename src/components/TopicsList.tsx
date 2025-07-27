@@ -9,15 +9,17 @@ import { generateAssociations } from '@/lib/api-client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import ShareButton from '@/components/ShareButton'
 import { cn } from '@/lib/utils'
 
 interface TopicsListProps {
   topics: Topic[]
+  participants: number
   hasGenerated?: boolean
   onTopicsUpdate: (topics: Topic[]) => void
 }
 
-export default function TopicsList({ topics, hasGenerated = false, onTopicsUpdate }: TopicsListProps) {
+export default function TopicsList({ topics, participants, hasGenerated = false, onTopicsUpdate }: TopicsListProps) {
   const [expandedTopic, setExpandedTopic] = useState<string | null>(null)
   const [loadingTopic, setLoadingTopic] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -109,10 +111,19 @@ export default function TopicsList({ topics, hasGenerated = false, onTopicsUpdat
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <MessageSquare className="w-5 h-5 text-[#6B778C]" />
-          お題一覧
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <MessageSquare className="w-5 h-5 text-[#6B778C]" />
+            お題一覧
+          </CardTitle>
+          {topics.length > 0 && (
+            <ShareButton 
+              topics={topics}
+              participants={participants}
+              disabled={false}
+            />
+          )}
+        </div>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="space-y-2">
