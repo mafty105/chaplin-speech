@@ -32,7 +32,31 @@ export interface EnhancedTopic extends Topic {
   speechExample?: SpeechExample
 }
 
+export interface Participant {
+  id: string
+  name: string
+  topicId: string
+  topic?: string
+}
+
+export interface ParticipantContent {
+  keywords: string | null
+  keywordsGeneratedAt: string | null
+  speechExample: SpeechExample | null
+  speechGeneratedAt: string | null
+}
+
 export interface Session {
+  id: string
+  participants: Participant[]
+  speechStyle?: SpeechStyle
+  topics: Record<string, string> // participantId -> topic
+  createdAt: string
+  createdBy?: string
+  expiresAt: string
+}
+
+export interface LegacySession {
   id: string
   topics: EnhancedTopic[]
   participants: number
@@ -61,6 +85,30 @@ export type SpeechStyle =
   | 'moving' 
   | 'educational' 
   | 'surprising'
+
+export interface CreateNewSessionRequest {
+  participants: string[] | number // Either array of names or participant count
+}
+
+export interface CreateNewSessionResponse {
+  sessionId: string
+  redirectUrl: string
+}
+
+export interface GenerateTopicsRequest {
+  sessionId: string
+  speechStyle: SpeechStyle
+}
+
+export interface GenerateKeywordsRequest {
+  sessionId: string
+  participantId: string
+}
+
+export interface GenerateSpeechRequest {
+  sessionId: string
+  participantId: string
+}
 
 export interface GenerateCompleteSessionRequest {
   participants: number

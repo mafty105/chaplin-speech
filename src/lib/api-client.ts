@@ -80,3 +80,26 @@ export async function generateSpeech(
     throw error
   }
 }
+
+export async function generateQRCode(url: string): Promise<string> {
+  try {
+    const response = await fetch('/api/generate-qr', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error || 'Failed to generate QR code')
+    }
+
+    const data = await response.json()
+    return data.qrCode
+  } catch (error) {
+    console.error('Error generating QR code:', error)
+    throw error
+  }
+}

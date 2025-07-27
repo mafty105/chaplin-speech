@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { redis } from '@/lib/redis'
+import { Session, SpeechStyle } from '@/types'
 
 // Move API key to server-only environment variable
 const API_KEY = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || ''
@@ -11,7 +13,8 @@ interface SpeechTopicsResponse {
 }
 
 interface RequestBody {
-  participants: number
+  sessionId: string
+  speechStyle: SpeechStyle
 }
 
 // Model configuration
@@ -46,9 +49,41 @@ const fallbackTopics = [
 
 // Validation function
 function validateRequestBody(body: any): body is RequestBody {
-  return typeof body.participants === 'number' && 
-         body.participants >= 1 && 
-         body.participants <= 10
+  return typeof body.sessionId === 'string' && 
+         body.sessionId.length > 0 &&
+         typeof body.speechStyle === 'string'
+}
+
+// Get style specific instructions
+function getStyleInstructions(style: SpeechStyle): string {
+  switch(style) {
+    case 'funny':
+      return `
+特に重要: 面白い話が作りやすいお題を選んでください。
+- 日常の失敗談やハプニングが話しやすい話題
+- ユーモラスな体験談を引き出しやすいお題
+- 笑いを誘う要素がある話題`
+    case 'moving':
+      return `
+特に重要: 感動的な話が作りやすいお題を選んでください。
+- 人との絆や思い出に関連する話題
+- 感謝や成長が語りやすいお題
+- 心温まるエピソードを引き出しやすい話題`
+    case 'educational':
+      return `
+特に重要: 勉強になる話が作りやすいお題を選んでください。
+- 学びや発見に関連する話題
+- 知識や経験を共有しやすいお題
+- 教訓や気づきが語りやすい話題`
+    case 'surprising':
+      return `
+特に重要: びっくりする話が作りやすいお題を選んでください。
+- 意外な体験や発見に関連する話題
+- 驚きのエピソードを引き出しやすいお題
+- 予想外の展開が語りやすい話題`
+    default:
+      return ''
+  }
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse<SpeechTopicsResponse | { error: string }>> {
@@ -58,15 +93,28 @@ export async function POST(request: NextRequest): Promise<NextResponse<SpeechTop
     // Request validation
     if (!validateRequestBody(body)) {
       return NextResponse.json(
-        { error: '参加人数は1〜10人の間で指定してください' },
+        { error: 'リクエストが無効です' },
         { status: 400 }
       )
     }
 
-    const { participants } = body
+    const { sessionId, speechStyle } = body
+
+    // Fetch session from Redis
+    const session = await redis.get<Session>(`session:${sessionId}`)
+    if (!session) {
+      return NextResponse.json(
+        { error: 'セッションが見つかりません' },
+        { status: 404 }
+      )
+    }
+
+    const participants = session.participants.length
+    const styleInstructions = getStyleInstructions(speechStyle)
 
     const prompt = `
 チャップリン方式のスピーチ練習用のお題を${participants}個生成してください。
+${styleInstructions}
 
 要件:
 - 1-4単語程度の名詞または概念
@@ -110,6 +158,16 @@ export async function POST(request: NextRequest): Promise<NextResponse<SpeechTop
         topics.push(...shuffledFallback.slice(0, needed))
       }
       
+      // Update session with topics
+      const topicsMap: Record<string, string> = {}
+      session.participants.forEach((participant, index) => {
+        topicsMap[participant.id] = topics[index]
+      })
+      
+      session.topics = topicsMap
+      session.speechStyle = speechStyle
+      await redis.set(`session:${sessionId}`, session)
+      
       return NextResponse.json({ 
         topics 
       } satisfies SpeechTopicsResponse)
@@ -119,9 +177,20 @@ export async function POST(request: NextRequest): Promise<NextResponse<SpeechTop
       
       // Fallback: return shuffled topics for variety
       const shuffledFallback = [...fallbackTopics].sort(() => Math.random() - 0.5)
+      const topics = shuffledFallback.slice(0, participants)
+      
+      // Update session with fallback topics
+      const topicsMap: Record<string, string> = {}
+      session.participants.forEach((participant, index) => {
+        topicsMap[participant.id] = topics[index]
+      })
+      
+      session.topics = topicsMap
+      session.speechStyle = speechStyle
+      await redis.set(`session:${sessionId}`, session)
       
       return NextResponse.json({ 
-        topics: shuffledFallback.slice(0, participants),
+        topics,
         isFromCache: true 
       } satisfies SpeechTopicsResponse)
     }
