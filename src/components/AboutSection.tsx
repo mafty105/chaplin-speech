@@ -1,6 +1,3 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import { Info, Target, Users, Zap, BookOpen, Trophy, Film, Share2, Sparkles } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -96,19 +93,17 @@ export default function AboutSection() {
           <h3 className="font-medium text-[#172B4D] mb-3">このアプリでできること</h3>
           <div className="space-y-2">
             {features.map((feature, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex gap-3"
+                className="flex gap-3 animate-slide-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="text-[#0052CC] mt-0.5">{feature.icon}</div>
                 <div>
                   <h4 className="font-medium text-[#172B4D] text-sm">{feature.title}</h4>
                   <p className="text-xs text-[#6B778C] mt-0.5">{feature.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -121,16 +116,14 @@ export default function AboutSection() {
           </h3>
           <ul className="space-y-1.5">
             {targetUsers.map((user, index) => (
-              <motion.li
+              <li
                 key={index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                className="text-sm text-[#6B778C] flex items-start gap-2"
+                className="text-sm text-[#6B778C] flex items-start gap-2 animate-fade-in"
+                style={{ animationDelay: `${0.5 + index * 0.1}s` }}
               >
                 <span className="text-[#36B37E] mt-0.5">•</span>
                 <span>{user}</span>
-              </motion.li>
+              </li>
             ))}
           </ul>
         </div>
