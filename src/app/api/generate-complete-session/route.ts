@@ -6,7 +6,8 @@ import {
   GenerateCompleteSessionRequest, 
   GenerateCompleteSessionResponse, 
   EnhancedTopic,
-  Session 
+  Session,
+  SpeechStyle
 } from '@/types'
 
 // API configuration
@@ -44,7 +45,9 @@ function validateRequest(body: any): body is GenerateCompleteSessionRequest {
   return (
     typeof body.participants === 'number' &&
     body.participants >= 1 &&
-    body.participants <= 10
+    body.participants <= 10 &&
+    typeof body.speechStyle === 'string' &&
+    ['none', 'funny', 'moving', 'educational', 'surprising'].includes(body.speechStyle)
   )
 }
 
@@ -66,11 +69,84 @@ async function generateUniqueSessionId(): Promise<string> {
 }
 
 // Generate topics
-async function generateTopics(participants: number): Promise<string[]> {
-  const prompt = `
-スピーチ練習のためのお題を${participants}個生成してください。
-お題は、チャップリン方式で単語の連想がしやすいものにしてください。
+async function generateTopics(participants: number, speechStyle: SpeechStyle): Promise<string[]> {
+  let stylePrompt = ''
+  
+  switch (speechStyle) {
+    case 'funny':
+      stylePrompt = `
+今回は「面白い話」をするためのお題を生成してください。
 
+以下の条件を満たすお題を生成してください：
+- ユーモアのある経験や出来事を話しやすいお題
+- 笑いを誘うエピソードが思い浮かびやすいお題
+- 失敗談や恥ずかしい経験なども含めて良い
+- 聴衆を楽しませる話ができるお題
+
+良い例:
+- "私の恥ずかしい失敗談"
+- "笑える勘違い"
+- "ペットの面白い行動"
+- "子供の頃のいたずら"
+- "料理の大失敗"
+- "面白い偶然の出来事"`
+      break
+    case 'moving':
+      stylePrompt = `
+今回は「感動する話」をするためのお題を生成してください。
+
+以下の条件を満たすお題を生成してください：
+- 心温まる経験や思い出を話しやすいお題
+- 感動的なエピソードが思い浮かびやすいお題
+- 人との絆や成長を感じられるお題
+- 聴衆の心に響く話ができるお題
+
+良い例:
+- "人生を変えた出会い"
+- "忘れられない言葉"
+- "感謝の気持ち"
+- "乗り越えた困難"
+- "家族との思い出"
+- "誰かに助けられた経験"`
+      break
+    case 'educational':
+      stylePrompt = `
+今回は「勉強になる話」をするためのお題を生成してください。
+
+以下の条件を満たすお題を生成してください：
+- 学びや気づきのある経験を話しやすいお題
+- 教訓やアドバイスを含められるお題
+- 実用的な知識や経験を共有できるお題
+- 聴衆が何かを学べる話ができるお題
+
+良い例:
+- "失敗から学んだこと"
+- "読んで良かった本"
+- "仕事で得た教訓"
+- "効果的だった習慣"
+- "スキルの身につけ方"
+- "人生の転機での学び"`
+      break
+    case 'surprising':
+      stylePrompt = `
+今回は「びっくりする話」をするためのお題を生成してください。
+
+以下の条件を満たすお題を生成してください：
+- 予想外の展開や発見を話しやすいお題
+- 驚きの体験やエピソードが思い浮かびやすいお題
+- 意外性のある出来事を含められるお題
+- 聴衆を驚かせる話ができるお題
+
+良い例:
+- "信じられない偶然"
+- "意外な発見"
+- "予想外の結果"
+- "驚きの再会"
+- "思いがけない幸運"
+- "衝撃的な事実"`
+      break
+    default:
+      stylePrompt = `
 以下の条件を満たすお題を生成してください：
 - 個人的な経験や思い出を語りやすいお題
 - 具体的でイメージしやすいお題
@@ -85,7 +161,14 @@ async function generateTopics(participants: number): Promise<string[]> {
 - "子供の頃の夢"
 - "心に残る言葉"
 - "理想の休日"
-- "大切な人への感謝"
+- "大切な人への感謝"`
+  }
+  
+  const prompt = `
+スピーチ練習のためのお題を${participants}個生成してください。
+お題は、チャップリン方式で単語の連想がしやすいものにしてください。
+
+${stylePrompt}
 
 悪い例（避けてください）:
 - "愛" ← 単語だけは連想が難しい
@@ -132,7 +215,68 @@ ${topic} → 単語1 → 単語2 → 単語3 → 単語4 → 単語5 → 単語6
 }
 
 // Generate speech
-async function generateSpeech(topic: string, associations: string): Promise<any> {
+async function generateSpeech(topic: string, associations: string, speechStyle: SpeechStyle): Promise<any> {
+  let styleInstruction = ''
+  let styleTips: string[] = []
+  
+  switch (speechStyle) {
+    case 'funny':
+      styleInstruction = `
+このスピーチは「面白い話」として作成してください。
+- ユーモアのある内容にする
+- 笑いを誘う要素を含める
+- 軽快で楽しい雰囲気を作る
+- オチや意外な展開を含める`
+      styleTips = [
+        "表情豊かに、笑顔で話す",
+        "間（ま）を効果的に使う",
+        "ジェスチャーを活用する"
+      ]
+      break
+    case 'moving':
+      styleInstruction = `
+このスピーチは「感動する話」として作成してください。
+- 心に響く内容にする
+- 感情を込めた表現を使う
+- 共感を呼ぶエピソードを含める
+- 温かみのある締めくくりにする`
+      styleTips = [
+        "感情を込めて、ゆっくり話す",
+        "聴衆と目を合わせる",
+        "声に抑揚をつける"
+      ]
+      break
+    case 'educational':
+      styleInstruction = `
+このスピーチは「勉強になる話」として作成してください。
+- 学びや気づきを含む内容にする
+- 具体的な例や経験を交える
+- 実用的なアドバイスを含める
+- 明確な教訓で締めくくる`
+      styleTips = [
+        "要点を明確に伝える",
+        "具体例を効果的に使う",
+        "聴衆に問いかける"
+      ]
+      break
+    case 'surprising':
+      styleInstruction = `
+このスピーチは「びっくりする話」として作成してください。
+- 意外性のある内容にする
+- 予想外の展開を含める
+- 驚きの事実や発見を交える
+- インパクトのある締めくくりにする`
+      styleTips = [
+        "緩急をつけて話す",
+        "重要な部分で間を置く",
+        "驚きを演出する声のトーン"
+      ]
+      break
+    default:
+      styleInstruction = ''
+      styleTips = []
+  }
+  
   const prompt = `
 あなたは優秀なスピーチライターです。
 与えられたお題について、1-2分程度の短いスピーチ原稿を作成してください。
@@ -140,6 +284,7 @@ async function generateSpeech(topic: string, associations: string): Promise<any>
 与えられた情報:
 - スピーチのお題: "${topic}"
 - 連想ワード（ヒント）: ${associations}
+${styleInstruction ? '\nスピーチスタイルの指定:\n' + styleInstruction : ''}
 
 重要な注意事項:
 - スピーチは「${topic}」についてのスピーチです
@@ -169,6 +314,7 @@ async function generateSpeech(topic: string, associations: string): Promise<any>
 4. スピーチのポイント（tips）:
    - このスピーチを効果的にするための3つのアドバイス
    - 各20-40文字程度
+${styleTips.length > 0 ? `   - 推奨: ${styleTips.join(', ')}` : ''}
 
 以下のJSON形式で出力してください:
 {
@@ -198,7 +344,7 @@ export async function POST(request: NextRequest) {
     // Validate request
     if (!validateRequest(body)) {
       return NextResponse.json(
-        { error: '参加人数は1〜10人で指定してください' },
+        { error: 'リクエストの形式が正しくありません' },
         { status: 400 }
       )
     }
@@ -214,7 +360,7 @@ export async function POST(request: NextRequest) {
 
     // Generate all content
     console.log('Generating topics...')
-    const topicTexts = await generateTopics(body.participants)
+    const topicTexts = await generateTopics(body.participants, body.speechStyle)
     
     // Create enhanced topics with all content
     const enhancedTopics: EnhancedTopic[] = []
@@ -227,7 +373,7 @@ export async function POST(request: NextRequest) {
       const associations = await generateAssociations(topicText)
       
       console.log(`Generating speech for topic ${i + 1}...`)
-      const speechExample = await generateSpeech(topicText, associations)
+      const speechExample = await generateSpeech(topicText, associations, body.speechStyle)
       
       enhancedTopics.push({
         id: topicId,
@@ -250,6 +396,7 @@ export async function POST(request: NextRequest) {
       id: sessionId,
       topics: enhancedTopics,
       participants: body.participants,
+      speechStyle: body.speechStyle,
       createdAt,
       expiresAt
     }

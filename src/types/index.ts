@@ -36,6 +36,7 @@ export interface Session {
   id: string
   topics: EnhancedTopic[]
   participants: number
+  speechStyle?: SpeechStyle
   createdAt: string
   createdBy?: string
   expiresAt: string
@@ -54,8 +55,16 @@ export interface CreateSessionResponse {
   expiresAt: string
 }
 
+export type SpeechStyle = 
+  | 'none' 
+  | 'funny' 
+  | 'moving' 
+  | 'educational' 
+  | 'surprising'
+
 export interface GenerateCompleteSessionRequest {
   participants: number
+  speechStyle: SpeechStyle
 }
 
 export interface GenerateCompleteSessionResponse {
