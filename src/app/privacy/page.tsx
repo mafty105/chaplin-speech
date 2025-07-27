@@ -1,6 +1,3 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import { ArrowLeft, Shield, Eye, Database, Clock, UserCheck, Mail } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -82,11 +79,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#FAFBFC]">
       <div className="max-w-[720px] mx-auto px-4 py-8">
-        <motion.header 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
+        <header className="mb-8 animate-slide-up">
           <Link href="/">
             <Button variant="subtle" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -100,13 +93,11 @@ export default function PrivacyPage() {
           <p className="text-sm text-[#6B778C]">
             最終更新日：2024年12月
           </p>
-        </motion.header>
+        </header>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
+        <div 
+          className="mb-8 animate-slide-up"
+          style={{ animationDelay: '0.1s' }}
         >
           <Card>
             <CardContent className="py-6">
@@ -116,15 +107,14 @@ export default function PrivacyPage() {
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         <div className="space-y-6">
           {sections.map((section, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
+              className="animate-slide-up"
+              style={{ animationDelay: `${0.2 + index * 0.1}s` }}
             >
               <Card>
                 <CardHeader>
@@ -143,15 +133,13 @@ export default function PrivacyPage() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8"
+        <div
+          className="mt-8 animate-slide-up"
+          style={{ animationDelay: '0.8s' }}
         >
           <Card className="bg-[#DEEBFF] border-[#B3D4FF]">
             <CardContent className="py-6">
@@ -165,7 +153,7 @@ export default function PrivacyPage() {
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

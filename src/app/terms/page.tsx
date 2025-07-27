@@ -1,10 +1,8 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import { ArrowLeft, FileText, CheckCircle, AlertTriangle, Shield, RefreshCw, Scale } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import './terms.css'
 
 export default function TermsPage() {
   const sections = [
@@ -97,11 +95,7 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen bg-[#FAFBFC]">
       <div className="max-w-[720px] mx-auto px-4 py-8">
-        <motion.header 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
+        <header className="mb-8 fade-slide-down">
           <Link href="/">
             <Button variant="subtle" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -115,14 +109,9 @@ export default function TermsPage() {
           <p className="text-sm text-[#6B778C]">
             最終更新日：2024年12月
           </p>
-        </motion.header>
+        </header>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
+        <div className="mb-8 fade-slide-up animation-delay-100">
           <Card>
             <CardContent className="py-6">
               <p className="text-[#172B4D] leading-7">
@@ -132,15 +121,13 @@ export default function TermsPage() {
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         <div className="space-y-6">
           {sections.map((section, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
+              className={`fade-slide-left animation-delay-${200 + index * 100}`}
             >
               <Card>
                 <CardHeader>
@@ -159,16 +146,11 @@ export default function TermsPage() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8"
-        >
+        <div className="mt-8 fade-slide-up animation-delay-800">
           <Card className="bg-[#E3FCEF] border-[#ABF5D1]">
             <CardContent className="py-6">
               <h3 className="font-medium text-[#172B4D] mb-2">
@@ -180,14 +162,9 @@ export default function TermsPage() {
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-          className="mt-4"
-        >
+        <div className="mt-4 fade-slide-up animation-delay-900">
           <Card className="bg-[#FFEBE6] border-[#FFBDAD]">
             <CardContent className="py-6">
               <h3 className="font-medium text-[#172B4D] mb-2">
@@ -207,7 +184,7 @@ export default function TermsPage() {
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </div>
   )
