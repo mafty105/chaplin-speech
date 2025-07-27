@@ -113,37 +113,6 @@ export default function AboutSection() {
           </div>
         </div>
 
-        {/* New Features */}
-        <div className="bg-[#E3FCEF] border border-[#ABF5D1] p-4 rounded">
-          <h3 className="font-medium text-[#172B4D] mb-2 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#36B37E]" />
-            新機能のご紹介
-          </h3>
-          <ul className="space-y-2 text-sm text-[#172B4D]">
-            <li className="flex items-start gap-2">
-              <span className="text-[#36B37E] mt-0.5">•</span>
-              <div>
-                <span className="font-medium">事前生成システム：</span>
-                お題生成時に連想ワードとスピーチ例も同時に生成し、専用ページへ自動遷移
-              </div>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-[#36B37E] mt-0.5">•</span>
-              <div>
-                <span className="font-medium">QRコード共有：</span>
-                生成したお題をQRコードで簡単に共有（24時間有効）
-              </div>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-[#36B37E] mt-0.5">•</span>
-              <div>
-                <span className="font-medium">セッション管理：</span>
-                各セッションには固有のURLが割り当てられ、いつでもアクセス可能
-              </div>
-            </li>
-          </ul>
-        </div>
-
         {/* Target Users */}
         <div>
           <h3 className="font-medium text-[#172B4D] mb-3 flex items-center gap-2">
