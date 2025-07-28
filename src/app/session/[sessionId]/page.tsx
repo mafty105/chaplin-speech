@@ -4,12 +4,29 @@ import { useState, useEffect, use } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, User, Loader2, Share2, QrCode, CheckCircle2, Clock, AlertCircle, MessageSquare } from 'lucide-react'
+import {
+  Sparkles,
+  User,
+  Loader2,
+  Share2,
+  QrCode,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  MessageSquare,
+} from 'lucide-react'
 import { Session, SessionResponse, SpeechStyle } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { generateQRCode } from '@/lib/api-client'
+import {
+  SessionPageSkeleton,
+  SpeechStyleSkeleton,
+  SessionInfoSkeleton,
+  ParticipantListSkeleton,
+  ShareSectionSkeleton,
+} from '@/components/SessionPageSkeleton'
 
 interface SessionPageProps {
   params: Promise<{ sessionId: string }>
@@ -34,20 +51,20 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
         if (!response.ok) {
           throw new Error('セッションが見つかりません')
         }
-        
+
         const data: SessionResponse = await response.json()
         if (data.error || !data.session) {
           throw new Error(data.error || 'セッションの読み込みに失敗しました')
         }
-        
+
         setSession(data.session)
         setSpeechStyle(data.session.speechStyle || 'none')
-        
+
         // Generate share URL
         const baseUrl = window.location.origin
         const url = `${baseUrl}/session/${params.sessionId}`
         setShareUrl(url)
-        
+
         // Generate QR code
         const qrCode = await generateQRCode(url)
         setQrCodeUrl(qrCode)
@@ -63,18 +80,18 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
 
   const handleGenerateTopics = async () => {
     if (!session) return
-    
+
     setIsGeneratingTopics(true)
     setError(null)
-    
+
     try {
       const response = await fetch('/api/generate-topics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId: params.sessionId,
-          speechStyle: speechStyle
-        })
+          speechStyle: speechStyle,
+        }),
       })
 
       if (!response.ok) {
@@ -100,50 +117,48 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
     navigator.clipboard.writeText(shareUrl)
   }
 
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#0052CC]" />
-      </div>
-    )
-  }
-
-  if (error || !session) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="max-w-md">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 text-[#DE350B]">
-              <AlertCircle className="w-5 h-5" />
-              <p>{error || 'セッションが見つかりません'}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  const hasTopics = Object.keys(session.topics).length > 0
+  const hasTopics = session ? Object.keys(session.topics).length > 0 : false
 
   return (
     <div className="min-h-screen">
       <div className="max-w-[600px] mx-auto px-4 py-8">
-        <motion.header 
+        <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <Link href="/" className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF] transition-colors">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF] transition-colors"
+          >
             <Sparkles className="w-5 h-5" />
             <span className="font-semibold">ChaplinSpeech</span>
           </Link>
-          <h1 className="text-2xl font-bold text-[#172B4D]">
-            スピーチ練習セッション
-          </h1>
+          <h1 className="text-2xl font-bold text-[#172B4D]">スピーチ練習セッション</h1>
         </motion.header>
 
-        <main className="space-y-6">
+        {error ? (
+          <Card className="max-w-md mx-auto">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3 text-[#DE350B]">
+                <AlertCircle className="w-5 h-5" />
+                <p>{error}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : isLoading ? (
+          <SessionPageSkeleton />
+        ) : !session ? (
+          <Card className="max-w-md mx-auto">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3 text-[#DE350B]">
+                <AlertCircle className="w-5 h-5" />
+                <p>セッションが見つかりません</p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <main className="space-y-6">
           {/* Speech Style Selection */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -223,9 +238,7 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">お題の生成</CardTitle>
-                  <CardDescription>
-                    参加者ごとにスピーチのお題を生成します
-                  </CardDescription>
+                  <CardDescription>参加者ごとにスピーチのお題を生成します</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button
@@ -253,9 +266,7 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">参加者一覧</CardTitle>
-                  <CardDescription>
-                    各参加者のページでスピーチ練習を開始できます
-                  </CardDescription>
+                  <CardDescription>各参加者のページでスピーチ練習を開始できます</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -272,12 +283,12 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
                                 <div className="w-10 h-10 rounded-full bg-[#E2E5E9] group-hover:bg-[#0052CC] transition-colors flex items-center justify-center">
                                   <User className="w-5 h-5 text-[#6B778C] group-hover:text-white transition-colors" />
                                 </div>
-                                <div className="flex-1">
-                                  <p className="font-medium text-[#172B4D] group-hover:text-[#0052CC] transition-colors">
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-medium text-[#172B4D] group-hover:text-[#0052CC] transition-colors truncate">
                                     {participant.name}
                                   </p>
                                   {session.topics[participant.id] && (
-                                    <p className="text-sm text-[#6B778C]">
+                                    <p className="text-sm text-[#6B778C] truncate">
                                       お題: {session.topics[participant.id]}
                                     </p>
                                   )}
@@ -288,8 +299,18 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
                                   練習を開始
                                 </span>
                                 <div className="w-8 h-8 rounded-full bg-[#F4F5F7] group-hover:bg-[#0052CC] transition-colors flex items-center justify-center">
-                                  <svg className="w-4 h-4 text-[#6B778C] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                  <svg
+                                    className="w-4 h-4 text-[#6B778C] group-hover:text-white transition-colors"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M9 5l7 7-7 7"
+                                    />
                                   </svg>
                                 </div>
                               </div>
@@ -316,32 +337,24 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
                   <Share2 className="w-5 h-5" />
                   共有
                 </CardTitle>
-                <CardDescription>
-                  このURLを共有して他の参加者を招待できます
-                </CardDescription>
+                <CardDescription>このURLを共有して他の参加者を招待できます</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-[#172B4D] mb-1 block">
-                    共有URL
-                  </label>
+                  <label className="text-sm font-medium text-[#172B4D] mb-1 block">共有URL</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={shareUrl}
                       readOnly
-                      className="flex-1 px-3 py-2 border border-[#DFE1E6] rounded text-sm text-[#172B4D] bg-[#F4F5F7]"
+                      className="flex-1 min-w-0 px-3 py-2 border border-[#DFE1E6] rounded text-sm text-[#172B4D] bg-[#F4F5F7] truncate"
                     />
-                    <Button
-                      onClick={copyShareUrl}
-                      variant="secondary"
-                      size="sm"
-                    >
+                    <Button onClick={copyShareUrl} variant="secondary" size="sm">
                       コピー
                     </Button>
                   </div>
                 </div>
-                
+
                 {qrCodeUrl && (
                   <div className="text-center">
                     <p className="text-sm font-medium text-[#172B4D] mb-3">QRコード</p>
@@ -368,7 +381,8 @@ export default function SessionPage({ params: paramsPromise }: SessionPageProps)
               {error}
             </motion.div>
           )}
-        </main>
+          </main>
+        )}
       </div>
     </div>
   )

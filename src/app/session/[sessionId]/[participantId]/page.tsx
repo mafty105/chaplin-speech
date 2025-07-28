@@ -4,13 +4,22 @@ import { useState, useEffect, use } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, User, Loader2, MessageSquare, Lightbulb, ArrowLeft, RefreshCw } from 'lucide-react'
+import {
+  Sparkles,
+  User,
+  Loader2,
+  MessageSquare,
+  Lightbulb,
+  ArrowLeft,
+  RefreshCw,
+} from 'lucide-react'
 import { Session, SessionResponse, ParticipantContent, SpeechExample } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ParticipantPageSkeleton } from '@/components/ParticipantPageSkeleton'
 
 interface ParticipantPageProps {
-  params: Promise<{ 
+  params: Promise<{
     sessionId: string
     participantId: string
   }>
@@ -36,30 +45,30 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
         if (!response.ok) {
           throw new Error('セッションが見つかりません')
         }
-        
+
         const data: SessionResponse = await response.json()
         if (data.error || !data.session) {
           throw new Error(data.error || 'セッションの読み込みに失敗しました')
         }
-        
+
         setSession(data.session)
-        
+
         // Find participant
         const currentParticipant = data.session.participants.find(
-          p => p.id === params.participantId
+          (p) => p.id === params.participantId
         )
-        
+
         if (!currentParticipant) {
           throw new Error('参加者が見つかりません')
         }
-        
+
         setParticipant(currentParticipant)
-        
+
         // Fetch participant content
         const contentResponse = await fetch(
           `/api/sessions/${params.sessionId}/participants/${params.participantId}`
         )
-        
+
         if (contentResponse.ok) {
           const contentData = await contentResponse.json()
           setContent(contentData.content)
@@ -77,15 +86,15 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
   const handleGenerateKeywords = async () => {
     setIsGeneratingKeywords(true)
     setError(null)
-    
+
     try {
       const response = await fetch('/api/generate-keywords', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId: params.sessionId,
-          participantId: params.participantId
-        })
+          participantId: params.participantId,
+        }),
       })
 
       if (!response.ok) {
@@ -93,12 +102,12 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
       }
 
       const data = await response.json()
-      setContent(prev => ({
+      setContent((prev) => ({
         ...prev,
         keywords: data.keywords,
         keywordsGeneratedAt: new Date().toISOString(),
         speechExample: null,
-        speechGeneratedAt: null
+        speechGeneratedAt: null,
       }))
     } catch (err) {
       setError(err instanceof Error ? err.message : '関連キーワードの生成に失敗しました')
@@ -110,15 +119,15 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
   const handleGenerateSpeech = async () => {
     setIsGeneratingSpeech(true)
     setError(null)
-    
+
     try {
       const response = await fetch('/api/generate-speech-example', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId: params.sessionId,
-          participantId: params.participantId
-        })
+          participantId: params.participantId,
+        }),
       })
 
       if (!response.ok) {
@@ -126,10 +135,10 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
       }
 
       const data = await response.json()
-      setContent(prev => ({
+      setContent((prev) => ({
         ...prev!,
         speechExample: data.speech,
-        speechGeneratedAt: new Date().toISOString()
+        speechGeneratedAt: new Date().toISOString(),
       }))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'スピーチ例の生成に失敗しました')
@@ -138,59 +147,45 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#0052CC]" />
-      </div>
-    )
-  }
-
-  if (error || !session || !participant) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="max-w-md">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center gap-3">
-              <p className="text-[#DE350B]">{error || 'データが見つかりません'}</p>
-              <Button onClick={() => router.push('/')} variant="secondary">
-                ホームに戻る
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  const topic = session.topics[participant.id]
+  const topic = session && participant ? session.topics[participant.id] : null
 
   return (
     <div className="min-h-screen">
       <div className="max-w-[600px] mx-auto px-4 py-8">
-        <motion.header 
+        {error || (!session && !isLoading) || (!participant && !isLoading) ? (
+          <Card className="max-w-md mx-auto">
+            <CardContent className="pt-6">
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-[#DE350B]">{error || 'データが見つかりません'}</p>
+                <Button onClick={() => router.push('/')} variant="secondary">
+                  ホームに戻る
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : isLoading ? (
+          <ParticipantPageSkeleton sessionId={params.sessionId} />
+        ) : (
+          <>
+        <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Link 
+          <Link
             href={`/session/${params.sessionId}`}
             className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="text-sm">セッション管理に戻る</span>
           </Link>
-          
+
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Sparkles className="w-6 h-6 text-[#0052CC]" />
-              <h1 className="text-2xl font-bold text-[#172B4D]">
-                スピーチ練習
-              </h1>
+              <h1 className="text-2xl font-bold text-[#172B4D]">スピーチ練習</h1>
             </div>
-            <p className="text-sm text-[#6B778C]">
-              {participant.name}
-            </p>
+            <p className="text-sm text-[#6B778C]">{participant?.name}</p>
           </div>
         </motion.header>
 
@@ -209,7 +204,7 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xl font-semibold text-[#172B4D]">{topic}</p>
+                <p className="text-xl font-semibold text-[#172B4D] break-words">{topic}</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -244,7 +239,7 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
                   </Button>
                 ) : (
                   <div className="space-y-3">
-                    <p className="text-[#172B4D]">{content.keywords}</p>
+                    <p className="text-[#172B4D] break-words">{content.keywords}</p>
                     <Button
                       onClick={handleGenerateKeywords}
                       disabled={isGeneratingKeywords}
@@ -271,9 +266,7 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">スピーチ例</CardTitle>
-                  <CardDescription>
-                    関連キーワードを使った3分間スピーチの例です
-                  </CardDescription>
+                  <CardDescription>関連キーワードを使った3分間スピーチの例です</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {!content.speechExample ? (
@@ -292,7 +285,7 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
                       {/* Opening */}
                       <div>
                         <h4 className="font-medium text-[#172B4D] mb-2">導入</h4>
-                        <p className="text-[#172B4D] leading-relaxed">
+                        <p className="text-[#172B4D] leading-relaxed break-words">
                           {content.speechExample.speech.opening}
                         </p>
                       </div>
@@ -302,7 +295,7 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
                         <h4 className="font-medium text-[#172B4D] mb-2">本文</h4>
                         <div className="space-y-3">
                           {content.speechExample.speech.body.map((paragraph, index) => (
-                            <p key={index} className="text-[#172B4D] leading-relaxed">
+                            <p key={index} className="text-[#172B4D] leading-relaxed break-words">
                               {paragraph}
                             </p>
                           ))}
@@ -312,7 +305,7 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
                       {/* Closing */}
                       <div>
                         <h4 className="font-medium text-[#172B4D] mb-2">結び</h4>
-                        <p className="text-[#172B4D] leading-relaxed">
+                        <p className="text-[#172B4D] leading-relaxed break-words">
                           {content.speechExample.speech.closing}
                         </p>
                       </div>
@@ -360,6 +353,8 @@ export default function ParticipantPage({ params: paramsPromise }: ParticipantPa
             </motion.div>
           )}
         </main>
+        </>
+        )}
       </div>
     </div>
   )
