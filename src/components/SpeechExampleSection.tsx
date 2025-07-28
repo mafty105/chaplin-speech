@@ -26,7 +26,12 @@ export function SpeechExampleSection({ sessionId, participantId, speechExample: 
     try {
       await generateSpeechExample(sessionId, participantId)
       // The page will be revalidated and show new speech example
-    } catch (err) {
+    } catch (err: any) {
+      // NEXT_REDIRECT is not an actual error - it's how Next.js handles redirects
+      if (err?.digest?.startsWith('NEXT_REDIRECT')) {
+        // The redirect is happening, no need to set loading to false
+        return
+      }
       setError(err instanceof Error ? err.message : 'スピーチ例の生成に失敗しました')
     } finally {
       setIsGenerating(false)

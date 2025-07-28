@@ -25,7 +25,12 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', ha
 
     try {
       await generateTopics(sessionId, speechStyle)
-    } catch (err) {
+    } catch (err: any) {
+      // NEXT_REDIRECT is not an actual error - it's how Next.js handles redirects
+      if (err?.digest?.startsWith('NEXT_REDIRECT')) {
+        // The redirect is happening, no need to set loading to false
+        return
+      }
       setError(err instanceof Error ? err.message : 'お題の生成に失敗しました')
     } finally {
       setIsGenerating(false)
