@@ -36,7 +36,7 @@ export async function createSession(participants: string[] | number) {
     const session: Session = {
       id: sessionId,
       participants: participantList,
-      speechStyle: null,
+      speechStyle: undefined,
       topics: {},
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
