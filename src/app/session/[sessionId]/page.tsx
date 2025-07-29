@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, User, Clock, AlertCircle } from 'lucide-react'
+import Image from 'next/image'
+import { User, Clock, AlertCircle } from 'lucide-react'
 import { redis } from '@/lib/redis'
 import { Session } from '@/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -29,12 +30,12 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
         <header className="text-center mb-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF]"
+            className="inline-flex items-center gap-2 mb-4 text-black hover:text-gray-700"
           >
-            <Sparkles className="w-5 h-5" />
+            <Image src="/logo.svg" alt="ChaplinSpeech Logo" width={20} height={20} />
             <span className="font-semibold">ChaplinSpeech</span>
           </Link>
-          <h1 className="text-2xl font-bold text-[#172B4D]">スピーチ練習セッション</h1>
+          <h1 className="text-2xl font-bold text-black">スピーチ練習セッション</h1>
         </header>
 
         <main className="space-y-6">

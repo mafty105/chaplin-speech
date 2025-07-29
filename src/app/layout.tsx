@@ -19,10 +19,15 @@ export const metadata: Metadata = {
   keywords: ["スピーチ練習", "チャップリン方式", "プレゼンテーション", "コミュニケーション"],
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-alt.svg', type: 'image/svg+xml', rel: 'alternate' }
+      { url: '/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/favicon/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon/favicon.ico', rel: 'shortcut icon' }
     ],
+    apple: [
+      { url: '/favicon/apple-touch-icon.png', sizes: '180x180' }
+    ]
   },
+  manifest: '/favicon/site.webmanifest',
 };
 
 export default function RootLayout({

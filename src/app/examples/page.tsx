@@ -7,7 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Topic } from '@/types'
-import { generateSpeech, SpeechData } from '@/lib/api-client'
+import { generateSpeechAction } from '@/app/actions'
+
+interface SpeechData {
+  speech: {
+    opening: string
+    body: string[]
+    closing: string
+  }
+  tips: string[]
+}
 
 interface GeneratedSpeech extends SpeechData {
   index: number
@@ -43,7 +52,7 @@ export default function ExamplesPage() {
   // Generate speech for the topic
   const generateSpeechForTopic = async (topic: Topic, index: number): Promise<GeneratedSpeech> => {
     try {
-      const speechData = await generateSpeech(
+      const speechData = await generateSpeechAction(
         topic.text,
         topic.associations || ''  // Pass empty string if no associations
       )
@@ -101,7 +110,7 @@ export default function ExamplesPage() {
       // Generate speeches for each topic
       topics.forEach(async (topic, index) => {
         try {
-          const speechData = await generateSpeech(
+          const speechData = await generateSpeechAction(
             topic.text,
             topic.associations || ''  // Pass empty string if no associations
           )

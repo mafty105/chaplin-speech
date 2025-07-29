@@ -22,6 +22,15 @@ export default function Footer() {
             >
               利用規約
             </Link>
+            <span className="text-[#DFE1E6]">|</span>
+            <Link 
+              href="https://docs.google.com/forms/d/e/1FAIpQLSd9y7qTCzCT-vKYcHqY6ce297WcxuAzvWjUbP-B14Nj3BFKuQ/viewform?usp=header"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#6B778C] hover:text-[#172B4D]"
+            >
+              お問い合わせ
+            </Link>
           </div>
           
           {/* Copyright */}
