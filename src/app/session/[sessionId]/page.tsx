@@ -33,7 +33,7 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
             className="inline-flex items-center gap-2 mb-4 text-black hover:text-gray-700"
           >
             <Image src="/logo.svg" alt="ChaplinSpeech Logo" width={20} height={20} />
-            <span className="font-semibold">ChaplinSpeech</span>
+            <span className="font-semibold">Charlie Talk</span>
           </Link>
           <h1 className="text-2xl font-bold text-black">スピーチ練習セッション</h1>
         </header>

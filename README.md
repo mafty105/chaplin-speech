@@ -1,4 +1,4 @@
-# ChaplinSpeech MVP
+# Charlie Talk
 
 チャップリン方式でスピーチ力を鍛える練習アプリケーション
 
@@ -35,7 +35,7 @@ APIキーは[Google AI Studio](https://makersuite.google.com/app/apikey)から�
 pnpm dev
 ```
 
-http://localhost:4321 でアプリケーションが起動します。
+http://localhost:3000 でアプリケーションが起動します。
 
 ## 技術スタック
 

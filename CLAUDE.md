@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ChaplinSpeech is a Japanese speech practice application using the "Chaplin method" - a technique where users generate word association chains from given topics to inspire impromptu speeches. The app is built with Next.js 15 App Router and integrates with Google Gemini AI.
+Charlie Talk is a Japanese speech practice application using the "Chaplin method" - a technique where users generate word association chains from given topics to inspire impromptu speeches. The app is built with Next.js 15 App Router and integrates with Google Gemini AI.
 
 ## Development Commands
 
 ```bash
-pnpm dev        # Start development server on port 4321
+pnpm dev        # Start development server on port 3000
 pnpm build      # Build for production
 pnpm start      # Start production server
 pnpm lint       # Run ESLint

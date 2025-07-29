@@ -42,22 +42,21 @@ export default function AboutSection() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <Info className="w-5 h-5 text-[#6B778C]" />
-          ChaplinSpeechとは
+          Charlie Talkとは
         </CardTitle>
         <CardDescription>
-          チャーリー・チャップリンが実践していたスピーチ練習法をデジタル化
+          チャールズ・チャップリンが実践していたスピーチ練習法をサンプルスピーチ付きで練習できる
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
         {/* What is it */}
         <div>
           <h3 className="font-medium text-[#172B4D] mb-2 flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-[#FFAB00]" />
-            チャップリン方式とは？
+            チャップリンの連想法とは？
           </h3>
           <p className="text-sm text-[#6B778C] leading-5">
-            チャップリン方式は、与えられたお題から連想ゲームのように言葉を繋げていき、
-            そのお題についてスピーチを行う練習方法です。
+            チャップリンは、与えられたお題から連想ゲームのように言葉を繋げていき、
+            そのお題についてスピーチを行う練習を行なっていました。
             連想ワードは発想のヒントとして活用し、予期しないテーマでも即座に話を組み立てる力が身につきます。
           </p>
         </div>

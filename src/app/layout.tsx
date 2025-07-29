@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ChaplinSpeech MVP - チャップリン方式スピーチ練習",
+  title: "Charlie Talk - チャップリン方式スピーチ練習 | あがり症、雑談力、会話力",
   description: "チャップリン方式でスピーチ力を鍛える練習アプリ。お題から連想する言葉を繋げて創造力と即興力を向上させましょう。",
   keywords: ["スピーチ練習", "チャップリン方式", "プレゼンテーション", "コミュニケーション"],
   icons: {
