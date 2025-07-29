@@ -51,7 +51,7 @@ export default function AboutSection() {
       <CardContent className="space-y-5">
         {/* What is it */}
         <div>
-          <h3 className="font-medium text-[#172B4D] mb-2 flex items-center gap-2">
+          <h3 className="font-bold text-[#172B4D] mb-2 flex items-center gap-2">
             チャップリンの連想法とは？
           </h3>
           <p className="text-sm text-[#6B778C] leading-5">
@@ -63,7 +63,7 @@ export default function AboutSection() {
 
         {/* Chaplin's Story */}
         <div className="bg-[#F4F5F7] p-4 rounded border border-[#DFE1E6]">
-          <h3 className="font-medium text-[#172B4D] mb-2 flex items-center gap-2">
+          <h3 className="font-bold text-[#172B4D] mb-2 flex items-center gap-2">
             <Film className="w-4 h-4 text-[#6B778C]" />
             チャップリンの物語
           </h3>
@@ -89,7 +89,7 @@ export default function AboutSection() {
 
         {/* Features */}
         <div>
-          <h3 className="font-medium text-[#172B4D] mb-3">このアプリでできること</h3>
+          <h3 className="font-bold text-[#172B4D] mb-3">このアプリでできること</h3>
           <div className="space-y-2">
             {features.map((feature, index) => (
               <div
@@ -108,8 +108,7 @@ export default function AboutSection() {
 
         {/* Target Users */}
         <div>
-          <h3 className="font-medium text-[#172B4D] mb-3 flex items-center gap-2">
-            <Users className="w-4 h-4 text-[#36B37E]" />
+          <h3 className="font-bold text-[#172B4D] mb-3">
             こんな方におすすめ
           </h3>
           <ul className="space-y-1.5">
@@ -127,7 +126,7 @@ export default function AboutSection() {
 
         {/* How to use */}
         <div className="bg-[#DEEBFF] border border-[#B3D4FF] p-4 rounded">
-          <h3 className="font-medium text-[#172B4D] mb-2">使い方</h3>
+          <h3 className="font-bold text-[#172B4D] mb-2">使い方</h3>
           <ol className="space-y-1.5 text-sm text-[#172B4D]">
             <li className="flex gap-2">
               <span className="font-semibold text-[#0052CC]">1.</span>
