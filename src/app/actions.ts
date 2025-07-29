@@ -48,12 +48,13 @@ export async function createSession(participants: string[] | number) {
     if (!stored) {
       throw new Error('Failed to store session')
     }
-    
-    redirect(`/session/${sessionId}`)
   } catch (error) {
     console.error('Session creation error:', error)
     throw error
   }
+  
+  // Redirect should be outside the try-catch to avoid catching NEXT_REDIRECT
+  redirect(`/session/${sessionId}`)
 }
 
 const API_KEY = process.env.GEMINI_API_KEY || ''
