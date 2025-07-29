@@ -22,8 +22,9 @@ export function KeywordsSection({ sessionId, participantId, keywords: initialKey
     setError(null)
 
     try {
-      await generateKeywords(sessionId, participantId)
-      // The page will be revalidated and show new keywords
+      const result = await generateKeywords(sessionId, participantId)
+      // Update the UI immediately with the new keywords
+      setKeywords(result.keywords)
     } catch (err: any) {
       // NEXT_REDIRECT is not an actual error - it's how Next.js handles redirects
       if (err?.digest?.startsWith('NEXT_REDIRECT')) {

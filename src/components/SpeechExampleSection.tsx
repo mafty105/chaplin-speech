@@ -24,8 +24,9 @@ export function SpeechExampleSection({ sessionId, participantId, speechExample: 
     setError(null)
 
     try {
-      await generateSpeechExample(sessionId, participantId)
-      // The page will be revalidated and show new speech example
+      const result = await generateSpeechExample(sessionId, participantId)
+      // Update the UI immediately with the new speech example
+      setSpeechExample(result.speechExample)
     } catch (err: any) {
       // NEXT_REDIRECT is not an actual error - it's how Next.js handles redirects
       if (err?.digest?.startsWith('NEXT_REDIRECT')) {

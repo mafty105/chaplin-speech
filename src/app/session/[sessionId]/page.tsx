@@ -45,27 +45,6 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
             hasTopics={hasTopics}
           />
 
-          {/* Session Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">セッション情報</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-2 text-sm">
-                <Clock className="w-4 h-4 text-[#6B778C]" />
-                <span className="text-[#6B778C]">作成日時:</span>
-                <span className="text-[#172B4D]">
-                  {new Date(session.createdAt).toLocaleString('ja-JP')}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <User className="w-4 h-4 text-[#6B778C]" />
-                <span className="text-[#6B778C]">参加人数:</span>
-                <span className="text-[#172B4D]">{session.participants.length}人</span>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Participants List */}
           {hasTopics && (
             <Card>

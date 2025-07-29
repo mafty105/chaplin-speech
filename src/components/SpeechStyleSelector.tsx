@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { MessageSquare, Sparkles } from 'lucide-react'
 import { SpeechStyle } from '@/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,6 +16,7 @@ interface SpeechStyleSelectorProps {
 }
 
 export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', hasTopics }: SpeechStyleSelectorProps) {
+  const router = useRouter()
   const [speechStyle, setSpeechStyle] = useState<SpeechStyle>(initialSpeechStyle)
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -25,6 +27,8 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', ha
 
     try {
       await generateTopics(sessionId, speechStyle)
+      // Refresh the page to show the generated topics
+      router.refresh()
     } catch (err: any) {
       // NEXT_REDIRECT is not an actual error - it's how Next.js handles redirects
       if (err?.digest?.startsWith('NEXT_REDIRECT')) {
@@ -32,7 +36,6 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', ha
         return
       }
       setError(err instanceof Error ? err.message : 'お題の生成に失敗しました')
-    } finally {
       setIsGenerating(false)
     }
   }

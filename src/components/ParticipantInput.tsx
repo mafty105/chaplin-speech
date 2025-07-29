@@ -64,12 +64,8 @@ export default function ParticipantInput({ onSubmit }: ParticipantInputProps) {
         await onSubmit(validNames.length > 0 ? validNames : participantNames.filter(n => n.trim() !== ''))
       }
     } catch (error: any) {
-      // NEXT_REDIRECT is not an actual error - it's how Next.js handles redirects
-      if (error?.digest?.startsWith('NEXT_REDIRECT')) {
-        // The redirect is happening, no need to set loading to false
-        return
-      }
       console.error('Failed to create session:', error)
+    } finally {
       setIsLoading(false)
     }
   }

@@ -77,13 +77,22 @@ const fallbackTopics = [
 function getStyleInstructions(style: SpeechStyle): string {
   switch(style) {
     case 'funny':
-      return `特に重要: 面白い話が作りやすいお題を選んでください。`
+      return `
+      特に重要: 面白い話が作りやすいお題を選んでください。
+      - いい例: ["もっとも辛かった映画", "過去一番赤面した話", "友人との珍事件", "まずい料理を作ってしまった話"]
+      `
     case 'moving':
-      return `特に重要: 感動的な話が作りやすいお題を選んでください。`
+      return `特に重要: 感動的な話が作りやすいお題を選んでください。
+      - いい例: ["祖父との思い出", "部活動の思い出", "人生で一番の努力", "自分を祝ってもらった話"]
+      `
     case 'educational':
-      return `特に重要: 勉強になる話が作りやすいお題を選んでください。`
+      return `特に重要: 勉強になる話が作りやすいお題を選んでください。
+      - いい例: ["最近一番タメになった本", "仕事での教訓", "勉強不足で損をした話", "自分の失敗を踏まえた教訓"]
+      `
     case 'surprising':
-      return `特に重要: びっくりする話が作りやすいお題を選んでください。`
+      return `特に重要: びっくりする話が作りやすいお題を選んでください。
+      - いい例: ["最近知って驚いたこと", "旅先での不思議な出来事", "不思議な共通点がある人", "不思議な夢"]
+      `
     default:
       return ''
   }
@@ -124,7 +133,7 @@ export async function generateTopics(sessionId: string, speechStyle: SpeechStyle
       })
       
       const prompt = `
-チャップリン方式のスピーチ練習用のお題を${participants}個生成してください。
+スピーチ練習用のお題を${participants}個生成してください。
 ${styleInstructions}
 
 要件:
@@ -137,7 +146,7 @@ ${styleInstructions}
 
 悪い例（避けてください）: ["愛", "夢", "希望", "時間", "友情"] ← 単語だけは連想が難しい
 悪い例（避けてください）: ["政治について", "経済問題", "戦争と平和", "宗教"] ← 重すぎる話題
-悪い例（避けてください）: ["量子力学", "相対性理論", "DNA"] ← 専門的すぎる
+悪い例（避けてください）: ["量子力学", "相対性理論", "DNA", "発明"] ← 専門的すぎる
 悪い例（避けてください）: ["未来への希望", "記憶の断片", "沈黙の力"] ← 抽象的すぎる
 悪い例（避けてください）: ["ペットのこと", "自分の子ども", "結婚相手"] ← 万人に共通しない
 `
@@ -245,6 +254,9 @@ export async function generateKeywords(sessionId: string, participantId: string)
     await redis.set(contentKey, updatedContent)
 
     revalidatePath(`/session/${sessionId}/${participantId}`)
+    
+    // Return the generated keywords
+    return { keywords }
   } catch (error) {
     console.error('Keyword generation error:', error)
     throw error
@@ -363,6 +375,9 @@ ${styleInstruction}
     await redis.set(contentKey, updatedContent)
 
     revalidatePath(`/session/${sessionId}/${participantId}`)
+    
+    // Return the generated speech example
+    return { speechExample }
   } catch (error) {
     console.error('Speech example generation error:', error)
     throw error
