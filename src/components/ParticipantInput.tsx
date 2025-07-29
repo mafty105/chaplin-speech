@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Users, User, Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -82,7 +81,7 @@ export default function ParticipantInput({ onSubmit }: ParticipantInputProps) {
         <CardDescription>スピーチ練習に参加する人数または名前を入力してください</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <h3 className="text-sm font-medium text-[#172B4D] mb-3">入力方法</h3>
             <RadioGroup
@@ -136,7 +135,7 @@ const CountInput = ({
   isLoading: boolean
 }) => {
   return (
-    <>
+    <div className="space-y-3">
       <h3 className="text-sm font-medium text-[#172B4D]">参加人数</h3>
       <div className="flex items-center gap-3">
         <NumberStepper
@@ -148,7 +147,7 @@ const CountInput = ({
         />
         <span className="text-[#172B4D] text-base font-medium">人</span>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -166,7 +165,7 @@ const NamesInput = ({
   handleNameChange: (index: number, value: string) => void
 }) => {
   return (
-    <>
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-[#172B4D]">参加者の名前</h3>
         {participantNames.length < 10 && (
@@ -203,6 +202,6 @@ const NamesInput = ({
         ))}
       </div>
       <p className="text-xs text-[#6B778C]">最大10名まで入力できます</p>
-    </>
+    </div>
   )
 }

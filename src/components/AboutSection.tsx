@@ -95,8 +95,7 @@ export default function AboutSection() {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="flex gap-3 animate-slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="flex gap-3"
               >
                 <div className="text-[#0052CC] mt-0.5">{feature.icon}</div>
                 <div>
@@ -118,8 +117,7 @@ export default function AboutSection() {
             {targetUsers.map((user, index) => (
               <li
                 key={index}
-                className="text-sm text-[#6B778C] flex items-start gap-2 animate-fade-in"
-                style={{ animationDelay: `${0.5 + index * 0.1}s` }}
+                className="text-sm text-[#6B778C] flex items-start gap-2"
               >
                 <span className="text-[#36B37E] mt-0.5">•</span>
                 <span>{user}</span>

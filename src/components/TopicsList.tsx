@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { MessageSquare, CheckCircle2, ChevronDown, Loader2, ArrowRight, Lightbulb } from 'lucide-react'
 import Link from 'next/link'
 import { Topic } from '@/types'
@@ -69,11 +68,8 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
     return (
       <div className="flex flex-wrap items-center gap-2 mt-3">
         {words.map((word, index) => (
-          <motion.div
+          <div
             key={index}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05, duration: 0.2 }}
             className="flex items-center gap-2"
           >
             <Badge 
@@ -85,7 +81,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
             {index < words.length - 1 && (
               <ArrowRight className="w-3 h-3 text-[#6B778C]" />
             )}
-          </motion.div>
+          </div>
         ))}
       </div>
     )
@@ -128,16 +124,13 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
       <CardContent className="pt-0">
         <div className="space-y-2">
           {topics.map((topic, index) => (
-            <motion.div
+            <div
               key={topic.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05, duration: 0.2 }}
             >
               <button
                 onClick={() => handleTopicClick(topic)}
                 className={cn(
-                  "w-full text-left px-4 py-3 rounded border transition-all duration-200",
+                  "w-full text-left px-4 py-3 rounded border",
                   expandedTopic === topic.id
                     ? "border-[#0052CC] bg-[#DEEBFF] shadow-sm"
                     : "border-[#DFE1E6] hover:border-[#C1C7D0] hover:bg-[#F4F5F7]"
@@ -157,7 +150,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
                     )}
                     <ChevronDown 
                       className={cn(
-                        "w-5 h-5 text-[#6B778C] transition-transform duration-200",
+                        "w-5 h-5 text-[#6B778C]",
                         expandedTopic === topic.id && "rotate-180"
                       )}
                     />
@@ -165,40 +158,30 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
                 </div>
               </button>
 
-              <AnimatePresence>
-                {expandedTopic === topic.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-4 pb-3 pt-2">
-                      {loadingTopic === topic.id && (
-                        <div className="flex items-center gap-2 text-[#6B778C] py-2">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm">連想ワードを生成中...</span>
-                        </div>
-                      )}
-                      
-                      {topic.associations && loadingTopic !== topic.id && (
-                        <div>
-                          <p className="text-xs text-[#6B778C] font-medium">連想ワード:</p>
-                          {renderAssociations(topic.associations)}
-                        </div>
-                      )}
-
-                      {error && expandedTopic === topic.id && (
-                        <div className="text-xs text-[#DE350B] bg-[#FFEBE6] border border-[#FFBDAD] px-2 py-1 rounded mt-2">
-                          {error}
-                        </div>
-                      )}
+              {expandedTopic === topic.id && (
+                <div className="px-4 pb-3 pt-2">
+                  {loadingTopic === topic.id && (
+                    <div className="flex items-center gap-2 text-[#6B778C] py-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="text-sm">連想ワードを生成中...</span>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                  )}
+                  
+                  {topic.associations && loadingTopic !== topic.id && (
+                    <div>
+                      <p className="text-xs text-[#6B778C] font-medium">連想ワード:</p>
+                      {renderAssociations(topic.associations)}
+                    </div>
+                  )}
+
+                  {error && expandedTopic === topic.id && (
+                    <div className="text-xs text-[#DE350B] bg-[#FFEBE6] border border-[#FFBDAD] px-2 py-1 rounded mt-2">
+                      {error}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           ))}
         </div>
         

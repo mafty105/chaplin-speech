@@ -12,9 +12,10 @@ interface SpeechExampleSectionProps {
   participantId: string
   speechExample: SpeechExample | null
   showSection: boolean
+  duration: 1 | 2 | 3
 }
 
-export function SpeechExampleSection({ sessionId, participantId, speechExample: initialExample, showSection }: SpeechExampleSectionProps) {
+export function SpeechExampleSection({ sessionId, participantId, speechExample: initialExample, showSection, duration }: SpeechExampleSectionProps) {
   const [speechExample, setSpeechExample] = useState(initialExample)
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -24,7 +25,7 @@ export function SpeechExampleSection({ sessionId, participantId, speechExample: 
     setError(null)
 
     try {
-      const result = await generateSpeechExample(sessionId, participantId)
+      const result = await generateSpeechExample(sessionId, participantId, duration)
       // Update the UI immediately with the new speech example
       setSpeechExample(result.speechExample)
     } catch (err: any) {
@@ -45,7 +46,7 @@ export function SpeechExampleSection({ sessionId, participantId, speechExample: 
     <Card>
       <CardHeader>
         <CardTitle className="text-lg">スピーチ例</CardTitle>
-        <CardDescription>関連キーワードを使った3分間スピーチの例です</CardDescription>
+        <CardDescription>関連キーワードを使った{duration}分間スピーチの例です</CardDescription>
       </CardHeader>
       <CardContent>
         {!speechExample ? (
@@ -61,29 +62,16 @@ export function SpeechExampleSection({ sessionId, participantId, speechExample: 
           </Button>
         ) : (
           <div className="space-y-4">
-            {/* Opening */}
-            <div>
-              <h4 className="font-medium text-[#172B4D] mb-2">導入</h4>
+            {/* Speech content without section labels */}
+            <div className="space-y-3">
               <p className="text-[#172B4D] leading-relaxed break-words">
                 {speechExample.speech.opening}
               </p>
-            </div>
-
-            {/* Body */}
-            <div>
-              <h4 className="font-medium text-[#172B4D] mb-2">本文</h4>
-              <div className="space-y-3">
-                {speechExample.speech.body.map((paragraph, index) => (
-                  <p key={index} className="text-[#172B4D] leading-relaxed break-words">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            </div>
-
-            {/* Closing */}
-            <div>
-              <h4 className="font-medium text-[#172B4D] mb-2">結び</h4>
+              {speechExample.speech.body.map((paragraph, index) => (
+                <p key={index} className="text-[#172B4D] leading-relaxed break-words">
+                  {paragraph}
+                </p>
+              ))}
               <p className="text-[#172B4D] leading-relaxed break-words">
                 {speechExample.speech.closing}
               </p>

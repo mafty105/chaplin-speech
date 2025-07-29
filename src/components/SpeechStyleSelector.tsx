@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { MessageSquare, Sparkles } from 'lucide-react'
+import { MessageSquare, Sparkles, Clock } from 'lucide-react'
 import { SpeechStyle } from '@/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -12,12 +12,14 @@ import { generateTopics } from '@/app/actions'
 interface SpeechStyleSelectorProps {
   sessionId: string
   initialSpeechStyle?: SpeechStyle
+  initialDuration?: 1 | 2 | 3
   hasTopics: boolean
 }
 
-export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', hasTopics }: SpeechStyleSelectorProps) {
+export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', initialDuration = 2, hasTopics }: SpeechStyleSelectorProps) {
   const router = useRouter()
   const [speechStyle, setSpeechStyle] = useState<SpeechStyle>(initialSpeechStyle)
+  const [duration, setDuration] = useState<1 | 2 | 3>(initialDuration)
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,7 +28,7 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', ha
     setError(null)
 
     try {
-      await generateTopics(sessionId, speechStyle)
+      await generateTopics(sessionId, speechStyle, duration)
       // Refresh the page to show the generated topics
       router.refresh()
     } catch (err: any) {
@@ -72,6 +74,41 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', ha
           {hasTopics && (
             <p className="text-xs text-[#6B778C] mt-3">
               ※お題が生成済みのため、スタイルは変更できません
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Duration Selection */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Clock className="w-5 h-5" />
+            スピーチの長さ
+          </CardTitle>
+          <CardDescription>
+            スピーチ例の長さを選択してください
+            {!hasTopics && (
+              <span className="block mt-1 text-xs text-[#6B778C]">
+                ※長さは「お題を生成」ボタンをクリックした時に適用されます
+              </span>
+            )}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RadioGroup
+            value={duration.toString()}
+            onValueChange={(value) => setDuration(parseInt(value) as 1 | 2 | 3)}
+            disabled={isGenerating || hasTopics}
+            className="flex gap-4"
+          >
+            <RadioGroupItem value="1">1分</RadioGroupItem>
+            <RadioGroupItem value="2">2分</RadioGroupItem>
+            <RadioGroupItem value="3">3分</RadioGroupItem>
+          </RadioGroup>
+          {hasTopics && (
+            <p className="text-xs text-[#6B778C] mt-3">
+              ※お題が生成済みのため、長さは変更できません
             </p>
           )}
         </CardContent>

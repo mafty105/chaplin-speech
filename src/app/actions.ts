@@ -98,7 +98,7 @@ function getStyleInstructions(style: SpeechStyle): string {
   }
 }
 
-export async function generateTopics(sessionId: string, speechStyle: SpeechStyle) {
+export async function generateTopics(sessionId: string, speechStyle: SpeechStyle, duration: 1 | 2 | 3 = 2) {
   try {
     const session = await redis.get(`session:${sessionId}`) as Session | null
     if (!session) {
@@ -177,13 +177,14 @@ ${styleInstructions}
     
     session.topics = topicsMap
     session.speechStyle = speechStyle
+    session.speechDuration = duration
     
     await redis.set(`session:${sessionId}`, session)
 
     revalidatePath(`/session/${sessionId}`)
     
     // Return the updated session data
-    return { success: true, topics: topicsMap, speechStyle }
+    return { success: true, topics: topicsMap, speechStyle, duration }
   } catch (error) {
     console.error('Topic generation error:', error)
     throw error
@@ -214,7 +215,7 @@ export async function generateKeywords(sessionId: string, participantId: string)
       })
       
       const prompt = `
-「${topic}」というお題から連想される言葉を20個程度、カンマ区切りで出力してください。
+「${topic}」というお題から連想される言葉を10個程度、カンマ区切りで出力してください。
 
 要件:
 - 日本語で出力
@@ -263,7 +264,7 @@ export async function generateKeywords(sessionId: string, participantId: string)
   }
 }
 
-export async function generateSpeechExample(sessionId: string, participantId: string) {
+export async function generateSpeechExample(sessionId: string, participantId: string, duration: 1 | 2 | 3 = 2) {
   try {
     const session = await redis.get(`session:${sessionId}`) as Session | null
     if (!session) {
@@ -316,6 +317,7 @@ export async function generateSpeechExample(sessionId: string, participantId: st
         }
       })
       
+      const targetLength = duration * 300 // 300 characters per minute
       const styleInstruction = session.speechStyle && session.speechStyle !== 'none' 
         ? `\nスピーチスタイル: ${session.speechStyle === 'funny' ? '面白い話' : 
             session.speechStyle === 'moving' ? '感動する話' : 
@@ -324,22 +326,30 @@ export async function generateSpeechExample(sessionId: string, participantId: st
         : ''
       
       const prompt = `
-「${topic}」というお題で、以下の関連キーワードを使った3分間のスピーチ例を作成してください。
+「${topic}」というお題で、以下の関連キーワードを使った${duration}分間のスピーチ例を作成してください。
 
 関連キーワード: ${content.keywords}
 ${styleInstruction}
 
 要件:
-- 導入、本文（2-3段落）、結びの構成
+- 全体で${targetLength}文字程度の長さ
 - 関連キーワードを自然に取り入れる
 - 日本語で出力
 - 聞き手を惹きつける内容
-- 3分で話せる長さ（800-1000文字程度）
+- 読点（、）の使用は最小限にして読みやすくする
+- 導入、本文（2-3段落）、結びの構成だが、セクション名は出力しない
+- 段落間は自然につながるようにする
+
+良い例（読点の使い方）:
+「私が初めて犬を飼ったのは小学生の頃でした。名前はポチ。とても元気な子犬で毎日の散歩が楽しみでした。」
+
+悪い例（読点が多すぎる）:
+「私が、初めて、犬を飼ったのは、小学生の頃で、名前は、ポチと言いました。」
 
 構成:
-- opening: 導入部分
-- body: 本文（2-3段落の配列）
-- closing: 結びの部分
+- opening: 導入部分（セクション名は不要）
+- body: 本文（2-3段落の配列、セクション名は不要）
+- closing: 結びの部分（セクション名は不要）
 - tips: スピーチのコツ（2つ程度）
 `
       
@@ -349,18 +359,43 @@ ${styleInstruction}
     } catch (error) {
       console.error('AI generation failed, using fallback:', error)
       // Fallback speech example
+      const keywords = content.keywords.split(',').map(k => k.trim())
+      const openings = {
+        1: `今日は「${topic}」についてお話しします。このお題を聞いて私は${keywords[0]}のことを思い出しました。`,
+        2: `今日は「${topic}」についてお話しさせていただきます。このお題を聞いて私は${keywords[0]}のことを思い出しました。`,
+        3: `今日は「${topic}」についてお話しさせていただきます。このお題を聞いて私は${keywords[0]}のことを思い出しました。`
+      }
+      
+      const bodies = {
+        1: [
+          `${topic}について考えるとき私たちは様々な${keywords[1]}や${keywords[2]}を思い浮かべることでしょう。それぞれの人にとって${topic}は異なる意味を持っています。私自身の経験では${topic}は${keywords[3]}と深く結びついています。`
+        ],
+        2: [
+          `${topic}について考えるとき私たちは様々な${keywords[1]}や${keywords[2]}を思い浮かべることでしょう。それぞれの人にとって${topic}は異なる意味を持っています。`,
+          `私自身の経験では${topic}は${keywords[3]}と深く結びついています。それは単なる${keywords[4]}ではなく私たちの人生において重要な役割を果たしているのです。${topic}を通して私は多くのことを学びました。`
+        ],
+        3: [
+          `${topic}について考えるとき私たちは様々な${keywords[1]}や${keywords[2]}を思い浮かべることでしょう。それぞれの人にとって${topic}は異なる意味を持っています。`,
+          `私自身の経験では${topic}は${keywords[3]}と深く結びついています。それは単なる${keywords[4]}ではなく私たちの人生において重要な役割を果たしているのです。${topic}を通して私は多くのことを学びました。特に印象的だったのは${keywords[5] || keywords[0]}との出会いです。この経験は私の人生観を大きく変えました。`,
+          `${topic}について考えることで私たちは自分自身をより深く理解することができます。`
+        ]
+      }
+      
+      const closings = {
+        1: `皆さんもぜひ自分なりの${topic}について考えてみてください。`,
+        2: `皆さんもぜひ自分なりの${topic}について考えてみてください。きっと新しい発見があるはずです。`,
+        3: `皆さんもぜひ自分なりの${topic}について考えてみてください。きっと新しい発見があるはずです。そしてその発見が皆さんの人生をより豊かにしてくれることでしょう。`
+      }
+      
       speechExample = {
         speech: {
-          opening: `今日は「${topic}」についてお話しさせていただきます。このお題を聞いて、私は${content.keywords.split(',')[0]}のことを思い出しました。`,
-          body: [
-            `${topic}について考えるとき、私たちは様々な${content.keywords.split(',')[1]}や${content.keywords.split(',')[2]}を思い浮かべることでしょう。それぞれの人にとって、${topic}は異なる意味を持っています。`,
-            `私自身の経験では、${topic}は${content.keywords.split(',')[3]}と深く結びついています。それは単なる${content.keywords.split(',')[4]}ではなく、私たちの人生において重要な役割を果たしているのです。`
-          ],
-          closing: `${topic}について考えることで、私たちは自分自身をより深く理解することができます。皆さんも、ぜひ自分なりの${topic}について考えてみてください。`
+          opening: openings[duration] || openings[2],
+          body: bodies[duration] || bodies[2],
+          closing: closings[duration] || closings[2]
         },
         tips: [
-          '個人的な体験を具体的に話すと、聞き手の共感を得やすくなります',
-          '関連キーワードを自然に織り交ぜながら、話に一貫性を持たせましょう'
+          '個人的な体験を具体的に話すと聞き手の共感を得やすくなります',
+          '関連キーワードを自然に織り交ぜながら話に一貫性を持たせましょう'
         ]
       }
     }
@@ -377,7 +412,7 @@ ${styleInstruction}
     revalidatePath(`/session/${sessionId}/${participantId}`)
     
     // Return the generated speech example
-    return { speechExample }
+    return { speechExample, duration }
   } catch (error) {
     console.error('Speech example generation error:', error)
     throw error
