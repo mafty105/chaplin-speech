@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { MessageSquare, CheckCircle2, ChevronDown, Loader2, ArrowRight, Lightbulb } from 'lucide-react'
 import Link from 'next/link'
 import { Topic } from '@/types'
-import { generateAssociations } from '@/lib/api-client'
+import { generateAssociationsAction } from '@/app/actions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -43,12 +43,12 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
     setError(null)
 
     try {
-      const associations = await generateAssociations(topic.text)
+      const result = await generateAssociationsAction(topic.text)
       
       // Update topics with new associations
       const updatedTopics = topics.map(t => 
         t.id === topic.id 
-          ? { ...t, associations, associationGeneratedAt: new Date().toISOString() }
+          ? { ...t, associations: result.associations, associationGeneratedAt: new Date().toISOString() }
           : t
       )
       onTopicsUpdate(updatedTopics)

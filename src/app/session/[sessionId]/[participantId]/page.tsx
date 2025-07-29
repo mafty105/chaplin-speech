@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, MessageSquare, ArrowLeft } from 'lucide-react'
+import Image from 'next/image'
+import { MessageSquare, ArrowLeft } from 'lucide-react'
 import { redis } from '@/lib/redis'
 import { Session, ParticipantContent } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -60,8 +61,8 @@ export default async function ParticipantPage({ params: paramsPromise }: Partici
 
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Sparkles className="w-6 h-6 text-[#0052CC]" />
-              <h1 className="text-2xl font-bold text-[#172B4D]">スピーチ練習</h1>
+              <Image src="/logo.svg" alt="ChaplinSpeech Logo" width={24} height={24} />
+              <h1 className="text-2xl font-bold text-black">スピーチ練習</h1>
             </div>
             <p className="text-sm text-[#6B778C]">{participant.name}</p>
           </div>

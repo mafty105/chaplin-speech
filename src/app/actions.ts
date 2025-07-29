@@ -6,6 +6,7 @@ import { Session, Participant, SpeechStyle, ParticipantContent } from '@/types'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai'
+import { generateQRCodeDataURL } from '@/lib/qr-generator'
 
 export async function createSession(participants: string[] | number) {
   let sessionId: string = ''
@@ -415,6 +416,149 @@ ${styleInstruction}
     return { speechExample, duration }
   } catch (error) {
     console.error('Speech example generation error:', error)
+    throw error
+  }
+}
+
+export async function generateQRCodeAction(url: string) {
+  try {
+    const qrCodeDataUrl = await generateQRCodeDataURL(url)
+    return { qrCode: qrCodeDataUrl }
+  } catch (error) {
+    console.error('QR code generation error:', error)
+    throw new Error('Failed to generate QR code')
+  }
+}
+
+export async function generateAssociationsAction(topic: string) {
+  try {
+    let associations = ''
+    
+    try {
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-2.0-flash-lite',
+        generationConfig: {
+          temperature: 0.9,
+          maxOutputTokens: 300
+        }
+      })
+      
+      const prompt = `
+「${topic}」というお題から連想されるキーワードを10個生成してください。
+
+要件:
+- キーワードは「→」で繋いでください
+- 各キーワードは簡潔に（1-3語程度）
+- スピーチで使いやすい言葉を選ぶ
+- 日本語で出力
+
+良い例:
+犬 → 散歩 → 公園 → 子ども → 笑顔 → 幸せ → 家族 → 絆 → 思い出 → 成長
+
+悪い例（避けてください）:
+犬 → 犬種 → 血統書 → ブリーダー → 繁殖 ← 専門的すぎる
+`
+      
+      const result = await model.generateContent(prompt)
+      associations = result.response.text().trim()
+    } catch (error) {
+      console.error('AI generation failed, using fallback:', error)
+      // Fallback associations
+      const fallbackWords = [
+        '始まり', '出会い', '発見', '挑戦', '成長', 
+        '経験', '喜び', '感謝', '未来', '希望'
+      ]
+      associations = fallbackWords.join(' → ')
+    }
+    
+    return { associations }
+  } catch (error) {
+    console.error('Association generation error:', error)
+    throw error
+  }
+}
+
+export async function generateSpeechAction(topic: string, associations: string) {
+  try {
+    let speechData = null
+    
+    try {
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-2.0-flash-lite',
+        generationConfig: {
+          temperature: 0.9,
+          maxOutputTokens: 2000,
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: SchemaType.OBJECT,
+            properties: {
+              speech: {
+                type: SchemaType.OBJECT,
+                properties: {
+                  opening: { type: SchemaType.STRING },
+                  body: {
+                    type: SchemaType.ARRAY,
+                    items: { type: SchemaType.STRING }
+                  },
+                  closing: { type: SchemaType.STRING }
+                },
+                required: ['opening', 'body', 'closing']
+              },
+              tips: {
+                type: SchemaType.ARRAY,
+                items: { type: SchemaType.STRING }
+              }
+            },
+            required: ['speech', 'tips']
+          }
+        }
+      })
+      
+      const prompt = `
+「${topic}」というお題で、以下の連想キーワードを参考にした3分間のスピーチ例を作成してください。
+
+連想キーワード: ${associations}
+
+要件:
+- 導入、本文（2-3段落）、結びの構成
+- 連想キーワードを適度に取り入れる（全てを使う必要はない）
+- 日本語で出力
+- 聞き手を惹きつける内容
+- 3分で話せる長さ（800-1000文字程度）
+
+構成:
+- opening: 導入部分
+- body: 本文（2-3段落の配列）
+- closing: 結びの部分
+- tips: スピーチのコツ（2-3個）
+`
+      
+      const result = await model.generateContent(prompt)
+      const response = result.response
+      speechData = JSON.parse(response.text())
+    } catch (error) {
+      console.error('AI generation failed, using fallback:', error)
+      // Fallback speech
+      const words = associations.split('→').map(w => w.trim())
+      speechData = {
+        speech: {
+          opening: `今日は「${topic}」についてお話しさせていただきます。このお題を聞いて、私は${words[0] || 'いろいろなこと'}を思い浮かべました。`,
+          body: [
+            `${topic}というものは、私たちの日常生活の中で様々な形で現れます。それは時に${words[1] || '新しい発見'}をもたらし、時に${words[2] || '大切な気づき'}を与えてくれます。`,
+            `私自身の経験を振り返ってみると、${topic}に関連した${words[3] || '思い出'}がたくさんあります。それらの経験は、私に${words[4] || '成長の機会'}を与えてくれました。`
+          ],
+          closing: `${topic}について考えることで、私たちは自分自身をより深く理解することができます。皆さんもぜひ、自分なりの${topic}について考えてみてください。`
+        },
+        tips: [
+          '個人的な体験を具体的に話すと、聞き手の共感を得やすくなります',
+          '連想キーワードを自然に織り交ぜながら、話に一貫性を持たせましょう'
+        ]
+      }
+    }
+    
+    return speechData
+  } catch (error) {
+    console.error('Speech generation error:', error)
     throw error
   }
 }

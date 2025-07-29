@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Share2 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { generateQRCode } from '@/lib/api-client'
+import { generateQRCodeAction } from '@/app/actions'
 
 interface ShareSectionProps {
   sessionId: string
@@ -22,7 +22,7 @@ export function ShareSection({ sessionId }: ShareSectionProps) {
     setShareUrl(url)
 
     // Generate QR code
-    generateQRCode(url).then(setQrCodeUrl)
+    generateQRCodeAction(url).then(result => setQrCodeUrl(result.qrCode)).catch(console.error)
   }, [sessionId])
 
   const copyShareUrl = () => {
