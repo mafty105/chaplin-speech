@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import { ArrowLeft, Sparkles, MessageSquare, ArrowRight, Lightbulb, AlertCircle, Loader2, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -182,11 +181,7 @@ export default function ExamplesPage() {
   return (
     <div className="min-h-screen bg-[#FAFBFC]">
       <div className="max-w-[800px] mx-auto px-4 py-8">
-        <motion.header 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
+        <header className="mb-8">
           <Link href="/">
             <Button variant="subtle" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -203,7 +198,7 @@ export default function ExamplesPage() {
           <p className="text-sm text-[#6B778C] leading-5">
             生成された各お題についてスピーチ例を表示します
           </p>
-        </motion.header>
+        </header>
 
 
         {/* Regenerate All Button */}
@@ -222,11 +217,8 @@ export default function ExamplesPage() {
         {/* Generated Speeches */}
         <div className="space-y-6">
           {speeches.map((speech, index) => (
-            <motion.div
+            <div
               key={`speech-${speech.index}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
             >
               <Card>
                 <CardHeader>
@@ -331,17 +323,12 @@ export default function ExamplesPage() {
                   )}
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* General Tips */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8"
-        >
+        <div className="mt-8">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
@@ -375,7 +362,7 @@ export default function ExamplesPage() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

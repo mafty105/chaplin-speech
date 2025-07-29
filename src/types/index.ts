@@ -50,6 +50,7 @@ export interface Session {
   id: string
   participants: Participant[]
   speechStyle?: SpeechStyle
+  speechDuration?: 1 | 2 | 3 // duration in minutes
   topics: Record<string, string> // participantId -> topic
   createdAt: string
   createdBy?: string

@@ -29,7 +29,7 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
         <header className="text-center mb-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF] transition-colors"
+            className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF]"
           >
             <Sparkles className="w-5 h-5" />
             <span className="font-semibold">ChaplinSpeech</span>
@@ -42,6 +42,7 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
           <SpeechStyleSelector 
             sessionId={params.sessionId} 
             initialSpeechStyle={session.speechStyle}
+            initialDuration={session.speechDuration}
             hasTopics={hasTopics}
           />
 
@@ -60,15 +61,15 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
                       href={`/session/${params.sessionId}/${participant.id}`}
                       className="block group"
                     >
-                      <Card className="border-[#DFE1E6] hover:border-[#0052CC] hover:shadow-md transition-all cursor-pointer group-hover:bg-[#F7F8F9]">
+                      <Card className="border-[#DFE1E6] hover:border-[#0052CC] hover:shadow-md cursor-pointer group-hover:bg-[#F7F8F9]">
                         <CardContent className="py-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 flex-1">
-                              <div className="w-10 h-10 rounded-full bg-[#E2E5E9] group-hover:bg-[#0052CC] transition-colors flex items-center justify-center">
-                                <User className="w-5 h-5 text-[#6B778C] group-hover:text-white transition-colors" />
+                              <div className="w-10 h-10 rounded-full bg-[#E2E5E9] group-hover:bg-[#0052CC] flex items-center justify-center">
+                                <User className="w-5 h-5 text-[#6B778C] group-hover:text-white" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="font-medium text-[#172B4D] group-hover:text-[#0052CC] transition-colors truncate">
+                                <p className="font-medium text-[#172B4D] group-hover:text-[#0052CC] truncate">
                                   {participant.name}
                                 </p>
                                 {session.topics[participant.id] && (
@@ -79,12 +80,12 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="text-sm text-[#0052CC] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                              <span className="text-sm text-[#0052CC] font-medium opacity-0 group-hover:opacity-100">
                                 練習を開始
                               </span>
-                              <div className="w-8 h-8 rounded-full bg-[#F4F5F7] group-hover:bg-[#0052CC] transition-colors flex items-center justify-center">
+                              <div className="w-8 h-8 rounded-full bg-[#F4F5F7] group-hover:bg-[#0052CC] flex items-center justify-center">
                                 <svg
-                                  className="w-4 h-4 text-[#6B778C] group-hover:text-white transition-colors"
+                                  className="w-4 h-4 text-[#6B778C] group-hover:text-white"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"

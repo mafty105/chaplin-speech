@@ -58,7 +58,7 @@ export function ParticipantPageSkeleton({ sessionId }: { sessionId: string }) {
       <header className="mb-8">
         <Link
           href={`/session/${sessionId}`}
-          className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF] transition-colors"
+          className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF]"
         >
           <ArrowLeft className="w-4 h-4" />
           <span className="text-sm">セッション管理に戻る</span>

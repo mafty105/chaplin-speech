@@ -52,7 +52,7 @@ export default async function ParticipantPage({ params: paramsPromise }: Partici
         <header className="mb-8">
           <Link
             href={`/session/${params.sessionId}`}
-            className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF] transition-colors"
+            className="inline-flex items-center gap-2 mb-4 text-[#0052CC] hover:text-[#0065FF]"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="text-sm">セッション管理に戻る</span>
@@ -94,6 +94,7 @@ export default async function ParticipantPage({ params: paramsPromise }: Partici
             participantId={params.participantId}
             speechExample={content?.speechExample || null}
             showSection={!!content?.keywords}
+            duration={session.speechDuration || 2}
           />
         </main>
       </div>

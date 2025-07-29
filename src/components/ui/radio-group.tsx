@@ -95,7 +95,7 @@ export const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemPro
         <div className="relative">
           <div
             className={cn(
-              'h-4 w-4 rounded-full border-2 transition-colors',
+              'h-4 w-4 rounded-full border-2',
               isChecked
                 ? 'border-[#0052CC] bg-[#0052CC]'
                 : 'border-[#DFE1E6] bg-white',

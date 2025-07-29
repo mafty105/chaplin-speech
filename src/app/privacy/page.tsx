@@ -79,7 +79,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#FAFBFC]">
       <div className="max-w-[720px] mx-auto px-4 py-8">
-        <header className="mb-8 animate-slide-up">
+        <header className="mb-8">
           <Link href="/">
             <Button variant="subtle" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -95,10 +95,7 @@ export default function PrivacyPage() {
           </p>
         </header>
 
-        <div 
-          className="mb-8 animate-slide-up"
-          style={{ animationDelay: '0.1s' }}
-        >
+        <div className="mb-8">
           <Card>
             <CardContent className="py-6">
               <p className="text-[#172B4D] leading-7">
@@ -113,8 +110,6 @@ export default function PrivacyPage() {
           {sections.map((section, index) => (
             <div
               key={index}
-              className="animate-slide-up"
-              style={{ animationDelay: `${0.2 + index * 0.1}s` }}
             >
               <Card>
                 <CardHeader>
@@ -137,10 +132,7 @@ export default function PrivacyPage() {
           ))}
         </div>
 
-        <div
-          className="mt-8 animate-slide-up"
-          style={{ animationDelay: '0.8s' }}
-        >
+        <div className="mt-8">
           <Card className="bg-[#DEEBFF] border-[#B3D4FF]">
             <CardContent className="py-6">
               <h3 className="font-medium text-[#172B4D] mb-2">
