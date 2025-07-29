@@ -8,8 +8,9 @@ import { revalidatePath } from 'next/cache'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 export async function createSession(participants: string[] | number) {
+  let sessionId: string = ''
+  
   try {
-    let sessionId: string = ''
     let isUnique = false
     let attempts = 0
 
