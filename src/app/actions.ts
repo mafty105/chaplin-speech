@@ -5,7 +5,7 @@ import { redis } from '@/lib/redis'
 import { Session, Participant, SpeechStyle, ParticipantContent } from '@/types'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai'
 
 export async function createSession(participants: string[] | number) {
   let sessionId: string = ''
@@ -107,7 +107,19 @@ export async function generateTopics(sessionId: string, speechStyle: SpeechStyle
         generationConfig: {
           temperature: 0.8,
           maxOutputTokens: 1000,
-          responseMimeType: 'application/json'
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: SchemaType.OBJECT,
+            properties: {
+              topics: {
+                type: SchemaType.ARRAY,
+                items: {
+                  type: SchemaType.STRING
+                }
+              }
+            },
+            required: ['topics']
+          }
         }
       })
       
@@ -127,12 +139,7 @@ ${styleInstructions}
 悪い例（避けてください）: ["政治について", "経済問題", "戦争と平和", "宗教"] ← 重すぎる話題
 悪い例（避けてください）: ["量子力学", "相対性理論", "DNA"] ← 専門的すぎる
 悪い例（避けてください）: ["未来への希望", "記憶の断片", "沈黙の力"] ← 抽象的すぎる
-
-出力形式:
-以下のJSON形式で出力してください:
-{
-  "topics": ["お題1", "お題2", "お題3", ...]
-}
+悪い例（避けてください）: ["ペットのこと", "自分の子ども", "結婚相手"] ← 万人に共通しない
 `
       
       const result = await model.generateContent(prompt)
@@ -271,7 +278,29 @@ export async function generateSpeechExample(sessionId: string, participantId: st
         generationConfig: {
           temperature: 0.9,
           maxOutputTokens: 2000,
-          responseMimeType: 'application/json'
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: SchemaType.OBJECT,
+            properties: {
+              speech: {
+                type: SchemaType.OBJECT,
+                properties: {
+                  opening: { type: SchemaType.STRING },
+                  body: {
+                    type: SchemaType.ARRAY,
+                    items: { type: SchemaType.STRING }
+                  },
+                  closing: { type: SchemaType.STRING }
+                },
+                required: ['opening', 'body', 'closing']
+              },
+              tips: {
+                type: SchemaType.ARRAY,
+                items: { type: SchemaType.STRING }
+              }
+            },
+            required: ['speech', 'tips']
+          }
         }
       })
       
@@ -295,22 +324,11 @@ ${styleInstruction}
 - 聞き手を惹きつける内容
 - 3分で話せる長さ（800-1000文字程度）
 
-出力形式（必ずこのJSON形式で）:
-{
-  "speech": {
-    "opening": "導入部分のテキスト",
-    "body": [
-      "本文の第1段落",
-      "本文の第2段落",
-      "本文の第3段落（任意）"
-    ],
-    "closing": "結びの部分のテキスト"
-  },
-  "tips": [
-    "このスピーチを話すときのコツ1",
-    "このスピーチを話すときのコツ2"
-  ]
-}
+構成:
+- opening: 導入部分
+- body: 本文（2-3段落の配列）
+- closing: 結びの部分
+- tips: スピーチのコツ（2つ程度）
 `
       
       const result = await model.generateContent(prompt)
