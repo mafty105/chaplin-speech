@@ -121,6 +121,13 @@ ${styleInstructions}
 - 重複しない内容
 - 日本語で出力
 
+良い例: ["あなたにとっての人生", "学生時代のこと", "最近ハマっていること", "好きな動物", "理想の休日", "大切にしている言葉"]
+
+悪い例（避けてください）: ["愛", "夢", "希望", "時間", "友情"] ← 単語だけは連想が難しい
+悪い例（避けてください）: ["政治について", "経済問題", "戦争と平和", "宗教"] ← 重すぎる話題
+悪い例（避けてください）: ["量子力学", "相対性理論", "DNA"] ← 専門的すぎる
+悪い例（避けてください）: ["未来への希望", "記憶の断片", "沈黙の力"] ← 抽象的すぎる
+
 出力形式:
 以下のJSON形式で出力してください:
 {
@@ -158,6 +165,9 @@ ${styleInstructions}
     await redis.set(`session:${sessionId}`, session)
 
     revalidatePath(`/session/${sessionId}`)
+    
+    // Return the updated session data
+    return { success: true, topics: topicsMap, speechStyle }
   } catch (error) {
     console.error('Topic generation error:', error)
     throw error
