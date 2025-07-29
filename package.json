@@ -1,9 +1,9 @@
 {
-  "name": "chaplin-speech",
+  "name": "charlie-talk",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 4321",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

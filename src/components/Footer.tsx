@@ -35,7 +35,7 @@ export default function Footer() {
           
           {/* Copyright */}
           <div className="text-xs text-[#6B778C]">
-            © {currentYear} ChaplinSpeech. All rights reserved.
+            © {currentYear} Charlie Talk. All rights reserved.
           </div>
         </div>
       </div>
