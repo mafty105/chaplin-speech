@@ -36,7 +36,7 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
             <Image src="/logo.svg" alt="ChaplinSpeech Logo" width={20} height={20} />
             <span className="font-semibold">Charlie Talk</span>
           </Link>
-          <h1 className="text-2xl font-bold text-black">スピーチ練習セッション</h1>
+          <h1 className="text-2xl font-bold text-black">トークセッション</h1>
         </header>
 
         <main className="space-y-6">
@@ -58,7 +58,7 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">参加者一覧</CardTitle>
-                <CardDescription>各参加者のページでスピーチ練習を開始できます</CardDescription>
+                <CardDescription>各参加者のページでサンプルスピーチを見ることができます</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -73,14 +73,14 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 flex-1">
                               <div className="w-10 h-10 rounded-full bg-[#E2E5E9] group-hover:bg-[#0052CC] flex items-center justify-center">
-                                <User className="w-5 h-5 text-[#6B778C] group-hover:text-white" />
+                                <User className="w-5 h-5 text-black group-hover:text-white" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-[#172B4D] group-hover:text-[#0052CC] truncate">
                                   {participant.name}
                                 </p>
                                 {session.topics[participant.id] && (
-                                  <p className="text-sm text-[#6B778C] truncate">
+                                  <p className="text-sm text-black truncate">
                                     お題: {session.topics[participant.id]}
                                   </p>
                                 )}
@@ -92,7 +92,7 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
                               </span>
                               <div className="w-8 h-8 rounded-full bg-[#F4F5F7] group-hover:bg-[#0052CC] flex items-center justify-center">
                                 <svg
-                                  className="w-4 h-4 text-[#6B778C] group-hover:text-white"
+                                  className="w-4 h-4 text-black group-hover:text-white"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"

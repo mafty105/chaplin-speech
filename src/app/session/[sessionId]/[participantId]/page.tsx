@@ -62,9 +62,9 @@ export default async function ParticipantPage({ params: paramsPromise }: Partici
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Image src="/logo.svg" alt="ChaplinSpeech Logo" width={24} height={24} />
-              <h1 className="text-2xl font-bold text-black">スピーチ練習</h1>
+              <h1 className="text-2xl font-bold text-black">トークサンプル</h1>
             </div>
-            <p className="text-sm text-[#6B778C]">{participant.name}</p>
+            <p className="text-sm text-black">{participant.name}</p>
           </div>
         </header>
 

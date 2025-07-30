@@ -154,7 +154,7 @@ export default function ExamplesPage() {
       <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0052CC] mx-auto"></div>
-          <p className="mt-4 text-[#6B778C]">読み込み中...</p>
+          <p className="mt-4 text-black">読み込み中...</p>
         </div>
       </div>
     )
@@ -173,11 +173,11 @@ export default function ExamplesPage() {
           
           <Card>
             <CardContent className="py-12 text-center">
-              <AlertCircle className="w-12 h-12 text-[#6B778C] mx-auto mb-3" />
-              <p className="text-[#6B778C]">
+              <AlertCircle className="w-12 h-12 text-black mx-auto mb-3" />
+              <p className="text-black">
                 まだスピーチ例を表示できるお題がありません。
               </p>
-              <p className="text-sm text-[#6B778C] mt-2">
+              <p className="text-sm text-black mt-2">
                 ホームに戻って、お題を生成してください。
               </p>
             </CardContent>
@@ -204,7 +204,7 @@ export default function ExamplesPage() {
               スピーチ例
             </h1>
           </div>
-          <p className="text-sm text-[#6B778C] leading-5">
+          <p className="text-sm text-black leading-5">
             生成された各お題についてスピーチ例を表示します
           </p>
         </header>
@@ -257,7 +257,7 @@ export default function ExamplesPage() {
                   {/* Show associations for this topic */}
                   {topics[speech.index]?.associations && !speech.loading && !speech.error && (
                     <div className="bg-[#F4F5F7] p-3 rounded-lg">
-                      <p className="text-xs text-[#6B778C] font-medium mb-2">連想ワード:</p>
+                      <p className="text-xs text-black font-medium mb-2">連想ワード:</p>
                       <div className="flex flex-wrap items-center gap-2">
                         {topics[speech.index].associations!.split(' → ').map((word, idx, arr) => (
                           <div key={idx} className="flex items-center gap-2">
@@ -265,7 +265,7 @@ export default function ExamplesPage() {
                               {word.trim()}
                             </Badge>
                             {idx < arr.length - 1 && (
-                              <ArrowRight className="w-3 h-3 text-[#6B778C]" />
+                              <ArrowRight className="w-3 h-3 text-black" />
                             )}
                           </div>
                         ))}
@@ -276,12 +276,12 @@ export default function ExamplesPage() {
                   {speech.loading ? (
                     <div className="py-8 text-center">
                       <Loader2 className="w-6 h-6 animate-spin text-[#0052CC] mx-auto mb-2" />
-                      <p className="text-sm text-[#6B778C]">生成中...</p>
+                      <p className="text-sm text-black">生成中...</p>
                     </div>
                   ) : speech.error ? (
                     <div className="py-8 text-center">
                       <AlertCircle className="w-6 h-6 text-[#DE350B] mx-auto mb-2" />
-                      <p className="text-sm text-[#6B778C]">{speech.error}</p>
+                      <p className="text-sm text-black">{speech.error}</p>
                     </div>
                   ) : (
                     <>
@@ -321,7 +321,7 @@ export default function ExamplesPage() {
                         </h4>
                         <ul className="space-y-1">
                           {speech.tips.map((tip, idx) => (
-                            <li key={idx} className="text-sm text-[#6B778C] flex items-start gap-2">
+                            <li key={idx} className="text-sm text-black flex items-start gap-2">
                               <span className="text-[#36B37E] mt-0.5">•</span>
                               <span>{tip}</span>
                             </li>
@@ -349,21 +349,21 @@ export default function ExamplesPage() {
               <div className="space-y-4">
                 <div>
                   <h4 className="font-medium text-[#172B4D] mb-2">1. お題ごとのスピーチ例</h4>
-                  <p className="text-sm text-[#6B778C] leading-5">
+                  <p className="text-sm text-black leading-5">
                     各お題について1つずつスピーチ例が生成されます。
                     連想ワードをヒントに、お題から自由に発想を広げた内容になっています。
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium text-[#172B4D] mb-2">2. スピーチのカスタマイズ</h4>
-                  <p className="text-sm text-[#6B778C] leading-5">
+                  <p className="text-sm text-black leading-5">
                     生成されたスピーチ例をベースに、
                     自分の体験や考えを加えてオリジナルのスピーチに仕上げましょう。
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium text-[#172B4D] mb-2">3. 連想ワードの活用</h4>
-                  <p className="text-sm text-[#6B778C] leading-5">
+                  <p className="text-sm text-black leading-5">
                     各スピーチに表示されている連想ワードは、
                     スピーチ作成のヒントやインスピレーションとして活用できます。
                   </p>

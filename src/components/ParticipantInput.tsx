@@ -75,7 +75,6 @@ export default function ParticipantInput({ onSubmit }: ParticipantInputProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Users className="w-5 h-5 text-[#6B778C]" />
           参加者の設定
         </CardTitle>
         <CardDescription>スピーチ練習に参加する人数または名前を入力してください</CardDescription>
@@ -178,7 +177,7 @@ const NamesInput = ({
       <div className="space-y-2">
         {participantNames.map((name, index) => (
           <div key={index} className="flex items-center gap-2">
-            <User className="w-4 h-4 text-[#6B778C]" />
+            <User className="w-4 h-4 text-black" />
             <Input
               placeholder={`参加者 ${index + 1}`}
               value={name}
@@ -201,7 +200,7 @@ const NamesInput = ({
           </div>
         ))}
       </div>
-      <p className="text-xs text-[#6B778C]">最大10名まで入力できます</p>
+      <p className="text-xs text-black">最大10名まで入力できます</p>
     </div>
   )
 }

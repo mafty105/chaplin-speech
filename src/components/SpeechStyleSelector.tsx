@@ -53,7 +53,7 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', in
           <CardDescription>
             生成されるお題とスピーチ例のスタイルを選択してください
             {!hasTopics && (
-              <span className="block mt-1 text-xs text-[#6B778C]">
+              <span className="block mt-1 text-xs text-black">
                 ※スタイルは「お題を生成」ボタンをクリックした時に適用されます
               </span>
             )}
@@ -72,7 +72,7 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', in
             <RadioGroupItem value="surprising">びっくりする話</RadioGroupItem>
           </RadioGroup>
           {hasTopics && (
-            <p className="text-xs text-[#6B778C] mt-3">
+            <p className="text-xs text-black mt-3">
               ※お題が生成済みのため、スタイルは変更できません
             </p>
           )}
@@ -89,7 +89,7 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', in
           <CardDescription>
             スピーチ例の長さを選択してください
             {!hasTopics && (
-              <span className="block mt-1 text-xs text-[#6B778C]">
+              <span className="block mt-1 text-xs text-black">
                 ※長さは「お題を生成」ボタンをクリックした時に適用されます
               </span>
             )}
@@ -107,7 +107,7 @@ export function SpeechStyleSelector({ sessionId, initialSpeechStyle = 'none', in
             <RadioGroupItem value="3">3分</RadioGroupItem>
           </RadioGroup>
           {hasTopics && (
-            <p className="text-xs text-[#6B778C] mt-3">
+            <p className="text-xs text-black mt-3">
               ※お題が生成済みのため、長さは変更できません
             </p>
           )}

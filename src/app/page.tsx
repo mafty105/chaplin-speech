@@ -13,7 +13,7 @@ export default function Home() {
             <Image src="/logo.svg" alt="ChaplinSpeech Logo" width={24} height={24} />
             <h1 className="text-2xl font-bold text-black">Charlie Talk</h1>
           </div>
-          <p className="text-sm text-[#6B778C] leading-5">チャップリン方式でスピーチ力を鍛えよう</p>
+          <p className="text-sm text-black leading-5">チャップリンの連想法で会話力を鍛えよう</p>
         </header>
 
         <main className="space-y-6">
