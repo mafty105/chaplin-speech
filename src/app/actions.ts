@@ -7,6 +7,9 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai'
 import { generateQRCodeDataURL } from '@/lib/qr-generator'
+import { withTokenRateLimit, TokenRateLimitError } from '@/lib/token-rate-limiter'
+
+const MODEL = 'gemini-2.5-flash-lite'
 
 export async function createSession(participants: string[] | number) {
   let sessionId: string = ''
@@ -113,7 +116,7 @@ export async function generateTopics(sessionId: string, speechStyle: SpeechStyle
     
     try {
       const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.0-flash-lite',
+        model: MODEL,
         generationConfig: {
           temperature: 0.8,
           maxOutputTokens: 1000,
@@ -208,31 +211,49 @@ export async function generateKeywords(sessionId: string, participantId: string)
     
     try {
       const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.0-flash-lite',
+        model: MODEL,
         generationConfig: {
           temperature: 0.9,
-          maxOutputTokens: 300
+          maxOutputTokens: 1000,
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: SchemaType.OBJECT,
+            properties: {
+              keywords: {
+                type: SchemaType.ARRAY,
+                items: {
+                  type: SchemaType.STRING
+                }
+              }
+            },
+            required: ['keywords']
+          }
         }
       })
       
       const prompt = `
-「${topic}」というお題から連想される言葉を10個程度、カンマ区切りで出力してください。
+「${topic}」というお題から連想される言葉を10個程度生成してください。
 
 要件:
 - 日本語で出力
 - スピーチで使いやすい言葉を選ぶ
 - 単語、短いフレーズ、概念など様々な形式を含める
-- カンマとスペースで区切る
+- 10-20個の範囲で生成
 
 良い例（お題: 好きな動物）:
-犬, 猫, ペット, 散歩, しっぽ, 癒し, 家族, 忠実, 毛並み, 鳴き声, 動物園, 野生, 保護, 絆, 成長, 思い出, 責任, 愛情, 一緒に暮らす, かわいい
+["犬", "猫", "ペット", "散歩", "しっぽ", "癒し", "家族", "忠実", "毛並み", "鳴き声", "動物園", "野生", "保護", "絆", "成長", "思い出", "責任", "愛情", "一緒に暮らす", "かわいい"]
 
 悪い例（避けてください）:
-動物学, 生態系, 分類学, 哺乳類 ← 専門的すぎる
+["動物学", "生態系", "分類学", "哺乳類"] ← 専門的すぎる
 `
       
       const result = await model.generateContent(prompt)
-      keywords = result.response.text().trim()
+      const response = result.response
+      const responseData = JSON.parse(response.text()) as { keywords: string[] }
+      
+      if (responseData.keywords && Array.isArray(responseData.keywords)) {
+        keywords = responseData.keywords.join(', ')
+      }
     } catch (error) {
       console.error('AI generation failed, using fallback:', error)
       // Fallback keywords
@@ -288,7 +309,7 @@ export async function generateSpeechExample(sessionId: string, participantId: st
     
     try {
       const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.0-flash-lite',
+        model: MODEL,
         generationConfig: {
           temperature: 0.9,
           maxOutputTokens: 2000,
@@ -333,10 +354,10 @@ export async function generateSpeechExample(sessionId: string, participantId: st
 ${styleInstruction}
 
 要件:
-- 全体で${targetLength}文字程度の長さ
-- 関連キーワードを自然に取り入れる
+- 全体で日本語で${targetLength}文字程度の長さ
+- 関連キーワードを自然に取り入れる。すべて取り入れる必要はないし、なくてもよい
 - 日本語で出力
-- 聞き手を惹きつける内容
+- 聞き手を惹きつける内容であるが、誇張された表現は避ける
 - 句読点は適切に使用し、読点（、）の過剰な使用は避ける
 - 導入、本文（2-3段落）、結びの構成だが、セクション名は出力しない
 - 段落間は自然につながるようにする
@@ -352,7 +373,7 @@ ${styleInstruction}
 
 構成:
 - opening: 導入部分（セクション名は不要）
-- body: 本文（2-3段落の配列、セクション名は不要）
+- body: 本文（2-3段落の配列、セクション名は不要）- 導入の内容が重複することは禁止
 - closing: 結びの部分（セクション名は不要）
 - tips: スピーチのコツ（2つ程度）
 `
@@ -439,10 +460,23 @@ export async function generateAssociationsAction(topic: string) {
     
     try {
       const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.0-flash-lite',
+        model: MODEL,
         generationConfig: {
           temperature: 0.9,
-          maxOutputTokens: 300
+          maxOutputTokens: 300,
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: SchemaType.OBJECT,
+            properties: {
+              associations: {
+                type: SchemaType.ARRAY,
+                items: {
+                  type: SchemaType.STRING
+                }
+              }
+            },
+            required: ['associations']
+          }
         }
       })
       
@@ -450,20 +484,25 @@ export async function generateAssociationsAction(topic: string) {
 「${topic}」というお題から連想されるキーワードを10個生成してください。
 
 要件:
-- キーワードは「→」で繋いでください
+- 連想の流れで繋がるキーワードを10個
 - 各キーワードは簡潔に（1-3語程度）
 - スピーチで使いやすい言葉を選ぶ
 - 日本語で出力
 
 良い例:
-犬 → 散歩 → 公園 → 子ども → 笑顔 → 幸せ → 家族 → 絆 → 思い出 → 成長
+["犬", "散歩", "公園", "子ども", "笑顔", "幸せ", "家族", "絆", "思い出", "成長"]
 
 悪い例（避けてください）:
-犬 → 犬種 → 血統書 → ブリーダー → 繁殖 ← 専門的すぎる
+["犬", "犬種", "血統書", "ブリーダー", "繁殖"] ← 専門的すぎる
 `
       
       const result = await model.generateContent(prompt)
-      associations = result.response.text().trim()
+      const response = result.response
+      const responseData = JSON.parse(response.text()) as { associations: string[] }
+      
+      if (responseData.associations && Array.isArray(responseData.associations)) {
+        associations = responseData.associations.join(' → ')
+      }
     } catch (error) {
       console.error('AI generation failed, using fallback:', error)
       // Fallback associations
@@ -487,7 +526,7 @@ export async function generateSpeechAction(topic: string, associations: string) 
     
     try {
       const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.0-flash-lite',
+        model: MODEL,
         generationConfig: {
           temperature: 0.9,
           maxOutputTokens: 2000,
