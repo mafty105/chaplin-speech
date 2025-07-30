@@ -7,6 +7,7 @@ import { Session } from '@/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { SpeechStyleSelector } from '@/components/SpeechStyleSelector'
 import { ShareSection } from '@/components/ShareSection'
+import { SpeechTimer } from '@/components/SpeechTimer'
 
 interface SessionPageProps {
   params: Promise<{ sessionId: string }>
@@ -39,6 +40,11 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
         </header>
 
         <main className="space-y-6">
+          {/* Speech Timer - Show after topics are generated */}
+          {hasTopics && (
+            <SpeechTimer duration={session.speechDuration || 2} />
+          )}
+
           {/* Speech Style Selection and Topic Generation */}
           <SpeechStyleSelector 
             sessionId={params.sessionId} 
@@ -110,8 +116,10 @@ export default async function SessionPage({ params: paramsPromise }: SessionPage
             </Card>
           )}
 
-          {/* Share Section */}
-          <ShareSection sessionId={params.sessionId} />
+          {/* Share Section - Show after topics are generated */}
+          {hasTopics && (
+            <ShareSection sessionId={params.sessionId} />
+          )}
         </main>
       </div>
     </div>
