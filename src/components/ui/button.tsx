@@ -14,7 +14,7 @@ const buttonVariants = cva(
         danger:
           "bg-[#FF5630] text-white hover:bg-[#FF7452] active:bg-[#DE350B] focus-visible:ring-[#FF5630]",
         subtle:
-          "bg-transparent text-black hover:bg-[#F4F5F7] hover:text-[#172B4D] active:bg-[#DFE1E6]",
+          "bg-transparent hover:bg-[#F4F5F7] hover:text-[#172B4D] active:bg-[#DFE1E6]",
         link:
           "bg-transparent text-[#0052CC] hover:text-[#0065FF] hover:underline active:text-[#0747A6] p-0 h-auto",
       },

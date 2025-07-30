@@ -79,7 +79,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
               {word}
             </Badge>
             {index < words.length - 1 && (
-              <ArrowRight className="w-3 h-3 text-black" />
+              <ArrowRight className="w-3 h-3" />
             )}
           </div>
         ))}
@@ -109,7 +109,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <MessageSquare className="w-5 h-5 text-black" />
+            <MessageSquare className="w-5 h-5" />
             お題一覧
           </CardTitle>
           {topics.length > 0 && (
@@ -138,7 +138,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <span className="text-xs text-black font-medium">お題 {index + 1}</span>
+                    <span className="text-xs font-medium">お題 {index + 1}</span>
                     <h3 className="text-base font-medium text-[#172B4D] mt-0.5">{topic.text}</h3>
                   </div>
                   <div className="flex items-center gap-2">
@@ -150,7 +150,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
                     )}
                     <ChevronDown 
                       className={cn(
-                        "w-5 h-5 text-black",
+                        "w-5 h-5",
                         expandedTopic === topic.id && "rotate-180"
                       )}
                     />
@@ -161,7 +161,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
               {expandedTopic === topic.id && (
                 <div className="px-4 pb-3 pt-2">
                   {loadingTopic === topic.id && (
-                    <div className="flex items-center gap-2 text-black py-2">
+                    <div className="flex items-center gap-2 py-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <span className="text-sm">連想ワードを生成中...</span>
                     </div>
@@ -169,7 +169,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
                   
                   {topic.associations && loadingTopic !== topic.id && (
                     <div>
-                      <p className="text-xs text-black font-medium">連想ワード:</p>
+                      <p className="text-xs font-medium">連想ワード:</p>
                       {renderAssociations(topic.associations)}
                     </div>
                   )}
@@ -187,7 +187,7 @@ export default function TopicsList({ topics, participants, hasGenerated = false,
         
         <div className="mt-4 space-y-3">
           <div className="p-3 bg-[#F4F5F7] rounded">
-            <p className="text-xs text-black text-center">
+            <p className="text-xs text-center">
               お題をクリックすると連想ワードが表示されます
             </p>
           </div>

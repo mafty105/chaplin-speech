@@ -11,9 +11,9 @@ export default function Home() {
         <header className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Image src="/logo.svg" alt="ChaplinSpeech Logo" width={24} height={24} />
-            <h1 className="text-2xl font-bold text-black">Charlie Talk</h1>
+            <h1 className="text-2xl font-bold">Charlie Talk</h1>
           </div>
-          <p className="text-sm text-black leading-5">チャップリンの連想法で会話力を鍛えよう</p>
+          <p className="text-sm leading-5">チャップリンの連想法で会話力を鍛えよう</p>
         </header>
 
         <main className="space-y-6">

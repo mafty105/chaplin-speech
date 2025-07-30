@@ -41,7 +41,7 @@ export default function AboutSection() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Info className="w-5 h-5 text-black" />
+          <Info className="w-5 h-5" />
           Charlie Talkとは
         </CardTitle>
         <CardDescription>
@@ -54,7 +54,7 @@ export default function AboutSection() {
           <h3 className="font-bold text-[#172B4D] mb-2 flex items-center gap-2">
             チャップリンの連想法とは？
           </h3>
-          <p className="text-sm text-black leading-5">
+          <p className="text-sm leading-5">
             チャップリンは、与えられたお題から連想ゲームのように言葉を繋げていき、
             そのお題についてスピーチを行う練習を行なっていました。
             連想ワードは発想のヒントとして活用し、予期しないテーマでも即座に話を組み立てる力が身につきます。
@@ -64,17 +64,17 @@ export default function AboutSection() {
         {/* Chaplin's Story */}
         <div className="bg-[#F4F5F7] p-4 rounded border border-[#DFE1E6]">
           <h3 className="font-bold text-[#172B4D] mb-2 flex items-center gap-2">
-            <Film className="w-4 h-4 text-black" />
+            <Film className="w-4 h-4" />
             チャップリンの物語
           </h3>
-          <p className="text-sm text-black leading-5 mb-3">
+          <p className="text-sm leading-5 mb-3">
             彼は往年、話の上手な人として知られており、世界中の人が彼の話を聞くのを楽しみにしていました。
           </p>
-          <p className="text-sm text-black leading-5 mb-3">
+          <p className="text-sm leading-5 mb-3">
             ところが喜劇王として知られていたにもかかわらず、実はチャップリンは、話し下手で悩んでいたそうです。
             人前で話せばすぐに上がってしまうし、言いたいことをきちんと伝えられませんでした。
           </p>
-          <p className="text-sm text-black leading-5">
+          <p className="text-sm leading-5">
             そこで、チャップリンは、苦手意識を克服し、
             「突然指名されても、聞き手の印象に残る話をしたい」と考え、
             スピーチの練習を始めました。
@@ -99,7 +99,7 @@ export default function AboutSection() {
                 <div className="text-[#0052CC] mt-0.5">{feature.icon}</div>
                 <div>
                   <h4 className="font-medium text-[#172B4D] text-sm">{feature.title}</h4>
-                  <p className="text-xs text-black mt-0.5">{feature.description}</p>
+                  <p className="text-xs mt-0.5">{feature.description}</p>
                 </div>
               </div>
             ))}
@@ -115,7 +115,7 @@ export default function AboutSection() {
             {targetUsers.map((user, index) => (
               <li
                 key={index}
-                className="text-sm text-black flex items-start gap-2"
+                className="text-sm flex items-start gap-2"
               >
                 <span className="text-[#36B37E] mt-0.5">•</span>
                 <span>{user}</span>

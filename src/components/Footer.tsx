@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
           
           {/* Copyright */}
-          <div className="text-xs text-black">
+          <div className="text-xs">
             © {currentYear} Charlie Talk. All rights reserved.
           </div>
         </div>

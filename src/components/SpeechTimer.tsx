@@ -102,7 +102,7 @@ export function SpeechTimer({ duration }: SpeechTimerProps) {
             </Button>
           </div>
           
-          <p className="text-sm text-black">
+          <p className="text-sm">
             スピーチ時間: {duration}分
           </p>
         </div>

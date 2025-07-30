@@ -177,7 +177,7 @@ const NamesInput = ({
       <div className="space-y-2">
         {participantNames.map((name, index) => (
           <div key={index} className="flex items-center gap-2">
-            <User className="w-4 h-4 text-black" />
+            <User className="w-4 h-4" />
             <Input
               placeholder={`参加者 ${index + 1}`}
               value={name}
@@ -200,7 +200,7 @@ const NamesInput = ({
           </div>
         ))}
       </div>
-      <p className="text-xs text-black">最大10名まで入力できます</p>
+      <p className="text-xs">最大10名まで入力できます</p>
     </div>
   )
 }
