@@ -1,8 +1,18 @@
+import { Metadata } from 'next'
 import { ArrowLeft, FileText, CheckCircle, AlertTriangle, Shield, RefreshCw, Scale } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import './terms.css'
+
+export const metadata: Metadata = {
+  title: '利用規約',
+  description: 'Charlie Talkの利用規約。サービスの利用条件、禁止事項、免責事項について説明しています。',
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
 
 export default function TermsPage() {
   const sections = [
