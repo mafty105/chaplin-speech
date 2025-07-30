@@ -90,7 +90,7 @@ export default function PrivacyPage() {
           <h1 className="text-2xl font-bold text-[#172B4D] mb-2">
             プライバシーポリシー
           </h1>
-          <p className="text-sm text-[#6B778C]">
+          <p className="text-sm">
             最終更新日：2024年12月
           </p>
         </header>

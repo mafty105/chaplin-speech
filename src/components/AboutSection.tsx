@@ -31,21 +31,21 @@ export default function AboutSection() {
   ]
 
   const targetUsers = [
-    "プレゼンテーションスキルを向上させたいビジネスパーソン",
-    "人前で話すことに自信をつけたい学生",
-    "創造的な発想力を鍛えたいクリエイター",
-    "コミュニケーション能力を高めたい全ての方"
+    "プレゼンテーションスキルを向上させたい",
+    "あがり症を克服し人前で話すことに自信をつけたい",
+    "咄嗟の会話力を向上せせたい",
+    "コミュニケーション能力を高めたい"
   ]
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Info className="w-5 h-5 text-[#6B778C]" />
+          <Info className="w-5 h-5" />
           Charlie Talkとは
         </CardTitle>
         <CardDescription>
-          チャールズ・チャップリンが実践していたスピーチ練習法をサンプルスピーチ付きで練習できる
+          チャールズ・チャップリンが実践していた会話力向上のための会話を一人から練習できるアプリです。
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
@@ -54,7 +54,7 @@ export default function AboutSection() {
           <h3 className="font-bold text-[#172B4D] mb-2 flex items-center gap-2">
             チャップリンの連想法とは？
           </h3>
-          <p className="text-sm text-[#6B778C] leading-5">
+          <p className="text-sm leading-5">
             チャップリンは、与えられたお題から連想ゲームのように言葉を繋げていき、
             そのお題についてスピーチを行う練習を行なっていました。
             連想ワードは発想のヒントとして活用し、予期しないテーマでも即座に話を組み立てる力が身につきます。
@@ -64,17 +64,17 @@ export default function AboutSection() {
         {/* Chaplin's Story */}
         <div className="bg-[#F4F5F7] p-4 rounded border border-[#DFE1E6]">
           <h3 className="font-bold text-[#172B4D] mb-2 flex items-center gap-2">
-            <Film className="w-4 h-4 text-[#6B778C]" />
+            <Film className="w-4 h-4" />
             チャップリンの物語
           </h3>
-          <p className="text-sm text-[#6B778C] leading-5 mb-3">
+          <p className="text-sm leading-5 mb-3">
             彼は往年、話の上手な人として知られており、世界中の人が彼の話を聞くのを楽しみにしていました。
           </p>
-          <p className="text-sm text-[#6B778C] leading-5 mb-3">
-            ところがチャップリンは、若い頃に話し下手で悩んでいたそうです。
+          <p className="text-sm leading-5 mb-3">
+            ところが喜劇王として知られていたにもかかわらず、実はチャップリンは、話し下手で悩んでいたそうです。
             人前で話せばすぐに上がってしまうし、言いたいことをきちんと伝えられませんでした。
           </p>
-          <p className="text-sm text-[#6B778C] leading-5">
+          <p className="text-sm leading-5">
             そこで、チャップリンは、苦手意識を克服し、
             「突然指名されても、聞き手の印象に残る話をしたい」と考え、
             スピーチの練習を始めました。
@@ -82,7 +82,7 @@ export default function AboutSection() {
           <div className="mt-3 p-3 bg-[#E6FCFF] border border-[#B3F5FF] rounded">
             <p className="text-xs text-[#0747A6] text-center font-medium">
               話し下手だった青年が、努力によって<br />
-              世界中から愛される話し手になった
+              世界中から愛される話し手になったというわけです。
             </p>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function AboutSection() {
                 <div className="text-[#0052CC] mt-0.5">{feature.icon}</div>
                 <div>
                   <h4 className="font-medium text-[#172B4D] text-sm">{feature.title}</h4>
-                  <p className="text-xs text-[#6B778C] mt-0.5">{feature.description}</p>
+                  <p className="text-xs mt-0.5">{feature.description}</p>
                 </div>
               </div>
             ))}
@@ -115,7 +115,7 @@ export default function AboutSection() {
             {targetUsers.map((user, index) => (
               <li
                 key={index}
-                className="text-sm text-[#6B778C] flex items-start gap-2"
+                className="text-sm flex items-start gap-2"
               >
                 <span className="text-[#36B37E] mt-0.5">•</span>
                 <span>{user}</span>

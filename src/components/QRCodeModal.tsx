@@ -76,7 +76,7 @@ export default function QRCodeModal({ isOpen, onClose, sessionData }: QRCodeModa
                       className="w-56 h-56"
                     />
                   </div>
-                  <p className="text-sm text-[#6B778C] mt-2">
+                  <p className="text-sm mt-2">
                     スキャンしてお題を共有
                   </p>
                 </div>
@@ -113,7 +113,7 @@ export default function QRCodeModal({ isOpen, onClose, sessionData }: QRCodeModa
                 </div>
                 
                 {/* Expiration */}
-                <div className="flex items-center gap-2 text-sm text-[#6B778C]">
+                <div className="flex items-center gap-2 text-sm">
                   <Clock className="w-4 h-4" />
                   <span>{formatExpirationTime(sessionData.expiresAt)}</span>
                 </div>

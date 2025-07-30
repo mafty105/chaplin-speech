@@ -18,7 +18,7 @@ const badgeVariants = cva(
         danger:
           "bg-[#FFEBE6] text-[#DE350B] border border-[#FFBDAD]",
         subtle:
-          "bg-[#F4F5F7] text-[#6B778C] border border-[#DFE1E6]",
+          "bg-[#F4F5F7] border border-[#DFE1E6]",
       },
       size: {
         default: "h-5",

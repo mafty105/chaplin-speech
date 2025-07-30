@@ -10,13 +10,13 @@ export function SessionInfoSkeleton() {
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center gap-2 text-sm">
-          <Clock className="w-4 h-4 text-[#6B778C]" />
-          <span className="text-[#6B778C]">作成日時:</span>
+          <Clock className="w-4 h-4" />
+          <span className="text-black">作成日時:</span>
           <Skeleton className="h-4 w-32" />
         </div>
         <div className="flex items-center gap-2 text-sm">
-          <User className="w-4 h-4 text-[#6B778C]" />
-          <span className="text-[#6B778C]">参加人数:</span>
+          <User className="w-4 h-4" />
+          <span className="text-black">参加人数:</span>
           <Skeleton className="h-4 w-12" />
         </div>
       </CardContent>
