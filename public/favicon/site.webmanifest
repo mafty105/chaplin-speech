@@ -1,6 +1,7 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Charlie Talk - チャップリン方式スピーチ練習",
+  "short_name": "Charlie Talk",
+  "description": "チャップリン方式でスピーチ力を鍛える練習アプリ。あがり症克服、雑談力向上、会話力アップに効果的。",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +16,10 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#0052CC",
+  "background_color": "#FAFBFC",
+  "display": "standalone",
+  "start_url": "/",
+  "lang": "ja",
+  "orientation": "portrait"
 }

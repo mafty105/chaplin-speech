@@ -1,7 +1,17 @@
+import { Metadata } from 'next'
 import { ArrowLeft, Shield, Eye, Database, Clock, UserCheck, Mail } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+export const metadata: Metadata = {
+  title: 'プライバシーポリシー',
+  description: 'Charlie Talkのプライバシーポリシー。個人情報の取り扱い、データの保存期間、セキュリティ対策について説明しています。',
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
 
 export default function PrivacyPage() {
   const sections = [
